@@ -1,0 +1,128 @@
+import type { FaithConfig } from '@/types';
+import { event, seed } from './shared';
+
+export const hindu: FaithConfig = {
+  id: 'HINDU',
+  slug: 'hindu',
+  name: 'Hindu',
+  shortName: 'Hindu',
+  regions: ['North India', 'South India', 'West India', 'East India', 'Nepal', 'Sri Lanka', 'Mauritius', 'Diaspora'],
+  summary:
+    'Hindu weddings are a series of celebrations leading to the vivah, with regional practice varying widely between families and communities.',
+  introduction:
+    'A Hindu wedding is usually built from several ceremonies rather than one day. Which of them a family keeps — and what they are called — depends on region, community and how the couple want to celebrate. This configuration is a starting point you can edit entirely: rename events, remove the ones that are not part of your wedding, or add your own.',
+  customisable: true,
+  guidance: [
+    {
+      title: 'Regional practice differs',
+      body: 'The ceremonies here are common across many traditions, but naming, order and ritual detail vary from region to region. Treat this list as a starting point rather than a description of your family.',
+    },
+    {
+      title: 'Nothing here is required',
+      body: 'Every event can be renamed, rescheduled or removed. Many couples keep some ceremonies and skip others entirely.',
+    },
+  ],
+  terminology: {
+    weddingDay: 'Vivah',
+    ceremony: 'Vivah',
+    reception: 'Reception',
+    couple: 'The couple',
+    bridalOutfit: 'Lehenga or saree',
+    groomOutfit: 'Sherwani or kurta',
+    blessingTerm: 'Blessings',
+  },
+  accent: { label: 'Marigold', token: '--faith-marigold', hex: '#C98A3C' },
+  events: [
+    event('hindu-engagement', 'Roka & Engagement', 'Families meet formally and the engagement is agreed.', 240, 'couple', 'home'),
+    event('hindu-mehendi', 'Mehendi', 'Henna is applied, usually at a relaxed gathering.', 4, 'bride', 'home'),
+    event('hindu-haldi', 'Haldi', 'Turmeric paste is applied to the couple in a blessing.', 3, 'couple', 'home'),
+    event('hindu-sangeet', 'Sangeet', 'An evening of music and dancing for both families.', 2, 'family', 'venue'),
+    event('hindu-vivah', 'Vivah', 'The wedding ceremony itself.', 0, 'couple', 'venue'),
+    event('hindu-reception', 'Reception', 'A celebratory dinner after the ceremony.', -1, 'couple', 'venue'),
+    event('hindu-griha', 'Griha Pravesh', 'The bride is welcomed into the family home.', -3, 'bride', 'home', true),
+  ],
+  leadCategoryIds: ['bridal-lehenga', 'bridal-saree', 'bridal-jewellery', 'mehendi', 'sherwani', 'ritual-items'],
+  leadVendorCategoryIds: ['bridalwear', 'mehendi', 'jewellery', 'decor', 'catering', 'photography', 'ritual-services'],
+  ritualServices: [
+    {
+      id: 'hindu-pandit',
+      name: 'Pandit or officiant',
+      description: 'Officiants who can conduct the vivah and advise on ritual sequence.',
+      vendorCategoryId: 'ritual-services',
+    },
+    {
+      id: 'hindu-mandap',
+      name: 'Mandap design',
+      description: 'Mandap structures built and dressed for the ceremony.',
+      vendorCategoryId: 'decor',
+    },
+    {
+      id: 'hindu-mehendi-artist',
+      name: 'Mehendi artist',
+      description: 'Artists for bridal and guest mehendi.',
+      vendorCategoryId: 'mehendi',
+    },
+    {
+      id: 'hindu-dhol',
+      name: 'Dhol and live music',
+      description: 'Dhol players and musicians for processions and sangeet.',
+      vendorCategoryId: 'entertainment',
+    },
+  ],
+  personalizedSections: [
+    {
+      id: 'hindu-mehendi',
+      title: 'Plan your mehendi',
+      description: 'Artists, designs and the details that make the mehendi your own.',
+      ctaLabel: 'Find mehendi artists',
+      href: '/vendors/mehendi',
+      mediaKey: 'mehendi-hands',
+    },
+    {
+      id: 'hindu-lehengas',
+      title: 'Bridal lehengas and sarees',
+      description: 'Pieces from designers who work with bridal embroidery and colour.',
+      ctaLabel: 'Explore bridal',
+      href: '/collections/bridal?category=bridal-lehenga',
+      mediaKey: 'editorial-pillars',
+    },
+    {
+      id: 'hindu-jewellery',
+      title: 'Wedding jewellery',
+      description: 'Necklaces, earrings and bangles for the vivah and the days around it.',
+      ctaLabel: 'Find jewellery',
+      href: '/collections/jewellery',
+      mediaKey: 'jewellery-necklace-worn',
+    },
+    {
+      id: 'hindu-decor',
+      title: 'Mandap and decor',
+      description: 'Florists and decorators who work with marigold, brass and fabric.',
+      ctaLabel: 'Book decor',
+      href: '/vendors/decor',
+      mediaKey: 'marigolds',
+    },
+    {
+      id: 'hindu-sangeet',
+      title: 'Sangeet and choreography',
+      description: 'Choreographers and performers for the night before the wedding.',
+      ctaLabel: 'Plan your sangeet',
+      href: '/planning/events',
+      mediaKey: 'dance-beach',
+    },
+  ],
+  checklist: [
+    seed('hindu-1', 'Agree which ceremonies you are keeping', 12, 'twelve-months', 'couple'),
+    seed('hindu-2', 'Book the pandit or officiant', 9, 'nine-months', 'couple', 'hindu-vivah'),
+    seed('hindu-3', 'Confirm the mandap design and decor palette', 6, 'six-months', 'couple', 'hindu-vivah'),
+    seed('hindu-4', 'Book the mehendi artist', 6, 'six-months', 'bride', 'hindu-mehendi'),
+    seed('hindu-5', 'Order the bridal lehenga or saree', 9, 'nine-months', 'bride', 'hindu-vivah'),
+    seed('hindu-6', 'Order the sherwani', 9, 'nine-months', 'groom', 'hindu-vivah'),
+    seed('hindu-7', 'Arrange haldi ingredients and the venue for it', 3, 'three-months', 'family', 'hindu-haldi'),
+    seed('hindu-8', 'Confirm dhol players and sangeet performers', 3, 'three-months', 'family', 'hindu-sangeet'),
+    seed('hindu-9', 'Agree the sangeet set list and rehearsals', 1, 'one-month', 'family', 'hindu-sangeet'),
+    seed('hindu-10', 'Prepare the mehendi night seating and catering', 1, 'one-month', 'family', 'hindu-mehendi'),
+    seed('hindu-11', 'Confirm vivah timings with the officiant', 1, 'one-month', 'couple', 'hindu-vivah'),
+    seed('hindu-12', 'Arrange the bridal entry and procession', 1, 'one-month', 'couple', 'hindu-vivah'),
+  ],
+};

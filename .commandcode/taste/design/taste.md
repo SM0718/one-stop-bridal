@@ -1,0 +1,22 @@
+# Design preferences
+
+- Strongly opposed to the generic "AI-generated website" look; wants restraint and taste over added effects. Confidence: 0.85
+- Explicitly rejects: harsh/rainbow/neon gradients, purple-blue SaaS gradients, glassmorphism and "liquid glass", excessive drop shadows, skeleton loaders everywhere, random orbs/blobs/dot grids/sparkle icons, animated arrows everywhere, hover animation on everything, decorative icon spam, three feature cards repeated everywhere, and arbitrary three-tier pricing. Confidence: 0.85
+- Believes a premium/luxury feel comes from typography, photography, spacing, hierarchy, proportions and composition — not from more visual effects. Confidence: 0.8
+- Prefers a restrained editorial palette (warm ivory/cream backgrounds, champagne/beige/blush secondaries, charcoal text, subtle antique-gold accent) where photography is the visual hero. Confidence: 0.8
+- Wants CSS variables / design tokens so the theme can be changed centrally. Confidence: 0.75
+- Prefers an editorial serif for display headings paired with a clean modern sans-serif for UI, body and forms; does not want decorative font overuse. Confidence: 0.75
+- Rejects ubiquitous default UI sans fonts (explicitly Inter) because they read as an AI-generated/SaaS template; the body/UI face should have subtle personality and feel editorial/fashion-oriented while remaining highly readable (chose Manrope paired with Cormorant Garamond). Confidence: 0.85
+- Constrains the type system to a narrow weight range (300/400/500/600); avoid 700/800/900 unless there's a specific design reason. Confidence: 0.8
+- When refining typography, doesn't want over-correction into decorative fashion fonts — body/UI text must stay extremely readable (no overly geometric, futuristic, handwritten, rounded, condensed, or display fonts for body text). Confidence: 0.8
+- Wants restrained typographic metrics: minimal letter-spacing for body/UI (small positive tracking only for uppercase labels), tighter line-height for large serif headings and comfortable line-height for body copy, ~50–75 characters per line for long-form editorial text. Confidence: 0.75
+- Wants restrained border radii — avoids making everything rounded-xl/2xl/full and overusing pill shapes. Confidence: 0.7
+- Animation should be editorial and intentional (subtle reveals, fade+translate, image scale), never the content itself; no bouncing/spinning, parallax on everything, particles. Confidence: 0.75
+- Rejects AI-cliché marketing copy (e.g. "seamless", "elevate", "curated", "journey", "unlock", "redefine", "transform", "next-generation", "discover your…"); wants concise, human language. Confidence: 0.8
+- Never wants fabricated business data: no fake testimonials, reviews, awards, press logos, statistics, urgency or scarcity. Confidence: 0.85
+- Avoids skeleton loaders everywhere; skeletons only where loading time justifies them. Confidence: 0.7
+- Wants mobile designed intentionally (bottom nav where appropriate, filter drawers, touch-friendly controls, horizontal rails) rather than a shrunken desktop, with no horizontal overflow. Confidence: 0.75
+- Targets fully responsive layouts across 320px through 1920px+, varying composition instead of repeating identical sections. Confidence: 0.75
+- Prefers realistic, context-appropriate mock data (believable names, no Lorem ipsum / John Doe / Test Company), with external image URLs isolated in data files so they can be replaced later. Confidence: 0.75
+- Prefers images that match context — no random unrelated stock photos or obviously synthetic imagery. Confidence: 0.7
+- Treats misalignment as a real defect, not a nitpick: grids should have cards of equal height, undistorted image aspect ratios, aligned elements such as CTA baselines, and fully packed rows with no dangling empty columns. Confidence: 0.65
