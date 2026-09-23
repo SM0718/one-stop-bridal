@@ -1,32 +1,45 @@
 import { Link } from '@tanstack/react-router';
-import { ArrowRight, Calendar, TickCircle } from 'iconsax-react';
+import { ArrowRight, Calendar, Eye, Heart, MessageText1 } from 'iconsax-react';
 import { routes } from '@/config/routes';
-import { useArticles, useFeaturedProducts, useVendors, useWeddingContext } from '@/hooks/queries';
+import { useArticles, useFeaturedProducts, useWeddingContext } from '@/hooks/queries';
 import { useDocumentMeta, schema } from '@/hooks/useDocumentMeta';
-import { useWeddingStore, selectTaskProgress } from '@/stores/wedding';
+import { useWeddingStore } from '@/stores/wedding';
 import { useUIStore } from '@/stores/ui';
-import { daysUntil, formatCount, formatDate } from '@/lib/format';
-import { VENDOR_CATEGORIES } from '@/data/categories';
+import { daysUntil, formatDate } from '@/lib/format';
+import { productCategoriesInGroup } from '@/data/categories';
+import { TRADITION_FAITHS } from '@/data/faiths';
+// Vendors and the vendor directory have been commented out for this bridal-only
+// build, along with the planning preview section.
+// import { useVendors } from '@/hooks/queries';
+// import { selectTaskProgress } from '@/stores/wedding';
+// import { formatCount } from '@/lib/format';
+// import { VENDOR_CATEGORIES } from '@/data/categories';
+// import { VENDORS } from '@/data/vendors';
 import { PRODUCTS } from '@/data/products';
-import { VENDORS } from '@/data/vendors';
 import { RETAILERS } from '@/data/retailers';
 import { FAITH_IDS } from '@/types';
 import { Button } from '@/components/ui/button';
 import { MediaImage, MediaZoom } from '@/components/ui/media';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Section, SectionHeader, EditorialSplit } from '@/components/editorial/Section';
 import { ProductCard } from '@/components/product/ProductCard';
-import { VendorCard } from '@/components/vendor/VendorCard';
+// import { VendorCard } from '@/components/vendor/VendorCard';
+// import { Progress } from '@/components/ui/progress';
 import { FaithChooser, type FaithSelection } from '@/components/faith/FaithChooser';
 import { FaithBadge } from '@/components/faith/FaithBadge';
+import { BlurFade } from '@/components/magicui/blur-fade';
+import { BentoCard, BentoGrid } from '@/components/magicui/bento-grid';
+import { BorderBeam } from '@/components/magicui/border-beam';
+import { Marquee } from '@/components/magicui/marquee';
+import { NumberTicker } from '@/components/magicui/number-ticker';
+import { ShimmerButton } from '@/components/magicui/shimmer-button';
+import { TextReveal } from '@/components/magicui/text-reveal';
 import { useState } from 'react';
 
 export function HomePage() {
   useDocumentMeta({
     title: 'One Stop Bridal — Weddings across faiths and cultures',
     description:
-      'Collections, vendors and planning tools for Hindu, Muslim, Christian, Sikh, Parsi, Jain, Buddhist, Jewish and interfaith weddings. Choose your wedding context and the whole platform adapts.',
+      'Collections and curated edits for Hindu, Muslim, Christian, Sikh, Parsi, Jain, Buddhist, Jewish and interfaith brides. Choose your wedding context and the platform adapts.',
     canonicalPath: routes.home,
     jsonLd: schema.organization(),
   });
@@ -36,16 +49,22 @@ export function HomePage() {
   const weddingDate = useWeddingStore((s) => s.profile.weddingDate);
 
   const { data: products } = useFeaturedProducts(8);
-  const { data: vendors } = useVendors({ pageSize: 3, faith: context.primary.id });
   const { data: articles } = useArticles({ limit: 3 });
 
   const remaining = daysUntil(weddingDate);
 
   /* Recommendations fill a single row of equal cards. The column count follows
-     the number available, so the row is never left with a dangling gap. */
-  const recommended = context.sections.slice(0, 4);
+     the number available, so the row is never left with a dangling gap.
+     Non-bridal sections (vendors, planning, jewellery…) are excluded in this
+     bridal-only build. */
+  const bridalSections = context.sections.filter((s) => s.href.startsWith('/collections/bridal'));
+  const recommended = bridalSections.slice(0, 4);
   const recommendedColumns =
     recommended.length >= 4 ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-2 lg:grid-cols-3';
+
+  /* The bridal rail only shows pieces from the bridal collection group. */
+  const bridalCategoryIds = new Set(productCategoriesInGroup('bridal').map((c) => c.id));
+  const bridalProducts = (products ?? []).filter((p) => bridalCategoryIds.has(p.categoryId));
 
   return (
     <>
@@ -61,16 +80,20 @@ export function HomePage() {
                 Everything for the wedding you imagine
               </h1>
               <p className="mt-6 max-w-lg text-[0.9375rem] leading-relaxed text-ink-soft">
-                Bridal and groom collections, jewellery, beauty, vendors and a planner that adapts to your ceremonies.
+                Bridal collections, curated edits and the ateliers behind them — adapted to your ceremonies.
                 Built for weddings across traditions — and for the ones that combine two.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Button asChild size="lg">
-                  <Link to={routes.planning}>Start planning</Link>
-                </Button>
+                <ShimmerButton
+                  asChild
+                  className="px-7 py-3.5 text-sm"
+                  background="hsl(var(--ink))"
+                >
+                  <Link to={routes.collectionsBridal}>Shop bridal</Link>
+                </ShimmerButton>
                 <Button asChild variant="outline" size="lg">
-                  <Link to={routes.collectionsBridal}>Explore bridal collections</Link>
+                  <Link to={routes.inspiration}>Explore inspiration</Link>
                 </Button>
               </div>
 
@@ -84,7 +107,7 @@ export function HomePage() {
               ) : null}
             </div>
 
-            <div className="lg:col-span-7">
+            <div className="relative overflow-hidden rounded-lg lg:col-span-7">
               <MediaImage
                 mediaKey="hero-portrait"
                 aspect="wide"
@@ -94,6 +117,13 @@ export function HomePage() {
                 height={810}
                 className="lg:aspect-[4/3]"
               />
+              <BorderBeam
+                size={160}
+                duration={9}
+                delay={0.5}
+                colorFrom="hsl(var(--gold))"
+                colorTo="hsl(var(--champagne-soft))"
+              />
             </div>
           </div>
 
@@ -101,21 +131,48 @@ export function HomePage() {
           <dl className="grid gap-6 border-t border-border py-7 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <dt className="eyebrow">Traditions configured</dt>
-              <dd className="mt-1.5 font-display text-2xl text-ink">{FAITH_IDS.length}</dd>
+              <dd className="mt-1.5 font-display text-2xl text-ink">
+                <NumberTicker value={FAITH_IDS.length} className="text-ink" delay={0.1} />
+              </dd>
             </div>
             <div>
               <dt className="eyebrow">Pieces in the catalogue</dt>
-              <dd className="mt-1.5 font-display text-2xl text-ink">{PRODUCTS.length}</dd>
+              <dd className="mt-1.5 font-display text-2xl text-ink">
+                <NumberTicker value={PRODUCTS.length} className="text-ink" delay={0.25} />
+              </dd>
             </div>
-            <div>
+            {/* The vendor directory has been commented out for this bridal-only build. */}
+            {/* <div>
               <dt className="eyebrow">Wedding professionals</dt>
               <dd className="mt-1.5 font-display text-2xl text-ink">{VENDORS.length}</dd>
-            </div>
+            </div> */}
             <div>
               <dt className="eyebrow">Retailers listing</dt>
-              <dd className="mt-1.5 font-display text-2xl text-ink">{RETAILERS.length}</dd>
+              <dd className="mt-1.5 font-display text-2xl text-ink">
+                <NumberTicker value={RETAILERS.length} className="text-ink" delay={0.4} />
+              </dd>
             </div>
           </dl>
+        </div>
+      </section>
+
+      {/* ================================================================
+          1b. Traditions band — decorative marquee
+          ================================================================ */}
+      <section className="border-b border-border bg-background" aria-label="Traditions covered">
+        <div className="container py-6">
+          <p className="eyebrow mb-4 text-center">Traditions we plan for</p>
+          <Marquee pauseOnHover className="[--duration:50s]">
+            {TRADITION_FAITHS.map((faith) => (
+              <span
+                key={faith.id}
+                className="mx-6 flex items-center gap-3 whitespace-nowrap font-display text-xl text-ink/70"
+              >
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gold" />
+                {faith.name}
+              </span>
+            ))}
+          </Marquee>
         </div>
       </section>
 
@@ -127,38 +184,40 @@ export function HomePage() {
       {/* ================================================================
           3. Personalised discovery — driven entirely by faith config
           ================================================================ */}
-      {context.sections.length > 0 ? (
+      {bridalSections.length > 0 ? (
         <Section tone="deep">
           <SectionHeader
             eyebrow="Recommended"
             title={`For a ${context.label} wedding`}
-            description="Not a generic list. Each of these comes from the ceremonies and categories your wedding context defines."
-            action={{ label: 'See all collections', href: routes.collections }}
+            description="Not a generic list. Each of these comes from the bridal collections your wedding context defines."
+            action={{ label: 'See all bridal', href: routes.collectionsBridal }}
           />
 
           <ul className={`mt-12 grid items-stretch gap-x-8 gap-y-10 ${recommendedColumns}`}>
-            {recommended.map((section) => (
-              <li key={section.id}>
-                <Link to={section.href} className="group flex h-full flex-col">
-                  <MediaZoom>
-                    <MediaImage
-                      mediaKey={section.mediaKey}
-                      aspect="editorial"
-                      sizes="(min-width: 1024px) 23vw, (min-width: 640px) 45vw, 100vw"
-                    />
-                  </MediaZoom>
-                  <h3 className="mt-5 font-display text-xl leading-snug text-ink">{section.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">{section.description}</p>
-                  <span className="mt-auto inline-flex items-center gap-2 pt-4 text-[0.8125rem] font-medium text-ink">
-                    {section.ctaLabel}
-                    <ArrowRight
-                      size={15}
-                      variant="Linear"
-                      className="transition-transform duration-300 ease-editorial group-hover:translate-x-1"
-                      aria-hidden="true"
-                    />
-                  </span>
-                </Link>
+            {recommended.map((section, index) => (
+              <li key={section.id} className="h-full">
+                <BlurFade delay={0.1 + index * 0.1} inView className="h-full">
+                  <Link to={section.href} className="group flex h-full flex-col">
+                    <MediaZoom>
+                      <MediaImage
+                        mediaKey={section.mediaKey}
+                        aspect="editorial"
+                        sizes="(min-width: 1024px) 23vw, (min-width: 640px) 45vw, 100vw"
+                      />
+                    </MediaZoom>
+                    <h3 className="mt-5 font-display text-xl leading-snug text-ink">{section.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-ink-soft">{section.description}</p>
+                    <span className="mt-auto inline-flex items-center gap-2 pt-4 text-[0.8125rem] font-medium text-ink">
+                      {section.ctaLabel}
+                      <ArrowRight
+                        size={15}
+                        variant="Linear"
+                        className="transition-transform duration-300 ease-editorial group-hover:translate-x-1"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </Link>
+                </BlurFade>
               </li>
             ))}
           </ul>
@@ -166,9 +225,11 @@ export function HomePage() {
       ) : null}
 
       {/* ================================================================
-          4. Ceremonies — from the faith configuration, not hardcoded
-          ================================================================ */}
-      <Section>
+            4. Ceremonies — planning feature, commented out for bridal-only build
+            ================================================================ */}
+      {/* The ceremonies/planner section has been commented out for this
+          bridal-only build. */}
+      {/* <Section>
         <SectionHeader
           eyebrow="Ceremonies"
           title="Plan every celebration in one place"
@@ -198,12 +259,12 @@ export function HomePage() {
           {context.guidance[0]?.body ??
             'Every event here is a starting point. Nothing is assumed about how you practise.'}
         </p>
-      </Section>
+      </Section> */}
 
       {/* ================================================================
           5. Bridal collections — product rail
           ================================================================ */}
-      {products && products.length > 0 ? (
+      {products && bridalProducts.length > 0 ? (
         <Section tone="deep">
           <SectionHeader
             eyebrow="The bridal edit"
@@ -212,9 +273,11 @@ export function HomePage() {
             action={{ label: 'All bridal', href: routes.collectionsBridal }}
           />
           <ul className="rail mt-12 -mx-5 gap-6 px-5 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-4 lg:overflow-visible">
-            {products.slice(0, 4).map((product, index) => (
+            {bridalProducts.slice(0, 4).map((product, index) => (
               <li key={product.id} className="w-[68%] shrink-0 sm:w-[46%] lg:w-auto">
-                <ProductCard product={product} priority={index < 2} />
+                <BlurFade delay={0.15 + index * 0.1} inView className="h-full">
+                  <ProductCard product={product} priority={index < 2} />
+                </BlurFade>
               </li>
             ))}
           </ul>
@@ -222,9 +285,9 @@ export function HomePage() {
       ) : null}
 
       {/* ================================================================
-          6. Vendor discovery
-          ================================================================ */}
-      <Section>
+            6. Vendor discovery — commented out for bridal-only build
+            ================================================================ */}
+      {/* <Section>
         <SectionHeader
           eyebrow="Vendors"
           title="Wedding professionals who understand your traditions"
@@ -254,12 +317,12 @@ export function HomePage() {
             </li>
           ))}
         </ul>
-      </Section>
+      </Section> */}
 
       {/* ================================================================
-          7. Planning — an interactive preview, not a screenshot
-          ================================================================ */}
-      <PlanningPreviewSection />
+            7. Planning preview — commented out for bridal-only build
+            ================================================================ */}
+      {/* <PlanningPreviewSection /> */}
 
       {/* ================================================================
           8. Editorial
@@ -315,6 +378,19 @@ export function HomePage() {
       ) : null}
 
       {/* ================================================================
+          8b. Manifesto — scroll-revealing serif statement
+          ================================================================ */}
+      <section className="border-b border-border bg-ivory/40" aria-label="What we believe">
+        <div className="container">
+          <p className="eyebrow mb-10 pt-20 text-center lg:pt-24">In one line</p>
+          <TextReveal
+            text="A wedding is held by hand. Every piece, practice and page on this site is there because someone chose it — by hand, printed, and kept."
+            className="pb-20 lg:pb-24"
+          />
+        </div>
+      </section>
+
+      {/* ================================================================
           9. Retailer ecosystem
           ================================================================ */}
       <Section>
@@ -326,27 +402,32 @@ export function HomePage() {
           action={{ label: 'Become a retailer', href: routes.retailers }}
         />
 
-        <ul className="mt-12 grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-3">
-          {[
-            {
-              title: 'Enquiries, not just clicks',
-              body: 'Every enquiry arrives with the piece, the customer’s city and their wedding date, so you can answer properly.',
-            },
-            {
-              title: 'Price on enquiry where you need it',
-              body: 'Made-to-measure pieces can be listed without a published price, and appear in every price filter as a result.',
-            },
-            {
-              title: 'Declare your traditions',
-              body: 'Tell couples which ceremonies you have worked before, and appear when they filter for them.',
-            },
-          ].map((item) => (
-            <li key={item.title} className="bg-background p-6 lg:p-8">
-              <h3 className="font-display text-xl text-ink">{item.title}</h3>
-              <p className="mt-2.5 text-sm leading-relaxed text-ink-soft">{item.body}</p>
-            </li>
-          ))}
-        </ul>
+        <BentoGrid className="mt-14">
+          <BentoCard
+            name="Enquiries, not just clicks"
+            Icon={MessageText1}
+            description="Every enquiry arrives with the piece, the customer’s city and their wedding date, so you can answer properly."
+            href={routes.retailers}
+            cta="How enquiries work"
+            className="md:col-span-1"
+          />
+          <BentoCard
+            name="Price on enquiry where you need it"
+            Icon={Eye}
+            description="Made-to-measure pieces can be listed without a published price, and appear in every price filter as a result."
+            href={routes.retailers}
+            cta="Listing pieces"
+            className="md:col-span-1"
+          />
+          <BentoCard
+            name="Declare your traditions"
+            Icon={Heart}
+            description="Tell couples which ceremonies you have worked before, and appear when they filter for them."
+            href={routes.retailers}
+            cta="Add your atelier"
+            className="md:col-span-1"
+          />
+        </BentoGrid>
       </Section>
 
       {/* ================================================================
@@ -361,20 +442,24 @@ export function HomePage() {
                 Pick your wedding context and the whole platform changes with it
               </h2>
               <p className="mt-5 max-w-lg text-[0.9375rem] leading-relaxed text-ink-soft">
-                Ceremonies, collections, vendors and a checklist written around your traditions. Change your mind at any
+                Collections, edits and inspiration written around your traditions. Change your mind at any
                 time — nothing is locked in.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Button asChild size="lg">
-                  <Link to={routes.onboarding}>Personalise my wedding</Link>
-                </Button>
+                <ShimmerButton
+                  asChild
+                  className="px-7 py-3.5 text-sm"
+                  background="hsl(var(--ink))"
+                >
+                  <Link to={routes.collectionsBridal}>Shop bridal</Link>
+                </ShimmerButton>
                 <Button asChild variant="outline" size="lg">
-                  <Link to={routes.vendors}>Find vendors</Link>
+                  <Link to={routes.inspiration}>Read inspiration</Link>
                 </Button>
               </div>
             </div>
             <MediaImage
-              mediaKey="editorial-silhouette"
+              mediaKey="hero-silhouette"
               aspect="editorial"
               sizes="(min-width: 1024px) 48vw, 100vw"
               className="hidden lg:block"
@@ -457,7 +542,7 @@ function ActiveContextSection() {
           <FaithBadge key={config.id} faith={config.id} prefix="Also" />
         ))}
         <span className="text-2xs uppercase tracking-eyebrow text-ink-muted">
-          {context.events.length} ceremonies · {context.leadVendorCategoryIds.length} vendor categories
+          {context.events.length} ceremonies
         </span>
       </div>
 
@@ -474,9 +559,9 @@ function ActiveContextSection() {
 }
 
 /**
- * The planning section is a working excerpt of the real checklist: ticking a
- * task here writes to the same store the planner uses.
+ * The planning preview section has been commented out for this bridal-only build.
  */
+/*
 function PlanningPreviewSection() {
   const context = useWeddingContext();
   const tasks = useWeddingStore((s) => s.tasks);
@@ -577,4 +662,5 @@ function PlanningPreviewSection() {
     </Section>
   );
 }
+*/
 

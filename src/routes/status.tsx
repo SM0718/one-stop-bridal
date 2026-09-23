@@ -19,7 +19,7 @@ export function RouteNotFound() {
           <Link to={routes.collections}>Browse collections</Link>
         </Button>
         <Button asChild variant="outline" size="lg">
-          <Link to={routes.vendors}>Find vendors</Link>
+          <Link to={routes.inspiration}>Read inspiration</Link>
         </Button>
         <Button asChild variant="ghost" size="lg">
           <Link to={routes.contact}>Report a broken link</Link>

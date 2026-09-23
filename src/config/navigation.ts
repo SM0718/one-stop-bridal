@@ -7,6 +7,10 @@ import { routes } from './routes';
  * Links carry `to` plus a structured `search` object rather than a query string
  * glued onto the path, so filters survive routing correctly and the URL stays
  * shareable.
+ *
+ * NOTE: this is a bridal-only build. Groom, accessories, jewellery, beauty and
+ * ceremony collection groups, the vendor directory and the planning tools have
+ * all been commented out below.
  */
 export interface NavLink {
   label: string;
@@ -53,15 +57,16 @@ export const PRIMARY_NAV: NavItem[] = [
           { label: 'Made to measure', to: routes.collectionsBridal, search: { category: 'custom-bridal' } },
         ],
       },
-      {
-        title: 'Beauty',
-        links: [
-          { label: 'Makeup', to: routes.collectionsBeauty, search: { category: 'makeup' } },
-          { label: 'Hair', to: routes.collectionsBeauty, search: { category: 'hair' } },
-          { label: 'Mehendi', to: routes.collectionsBeauty, search: { category: 'mehendi' } },
-          { label: 'Bridal skincare', to: routes.collectionsBeauty, search: { category: 'skincare' } },
-        ],
-      },
+      // Beauty collections have been commented out for this bridal-only build.
+      // {
+      //   title: 'Beauty',
+      //   links: [
+      //     { label: 'Makeup', to: routes.collectionsBeauty, search: { category: 'makeup' } },
+      //     { label: 'Hair', to: routes.collectionsBeauty, search: { category: 'hair' } },
+      //     { label: 'Mehendi', to: routes.collectionsBeauty, search: { category: 'mehendi' } },
+      //     { label: 'Bridal skincare', to: routes.collectionsBeauty, search: { category: 'skincare' } },
+      //   ],
+      // },
       {
         title: 'Shop by ceremony',
         links: [
@@ -82,6 +87,9 @@ export const PRIMARY_NAV: NavItem[] = [
       mediaKey: 'editorial-pillars',
     },
   },
+  /* Groom, accessories, wedding (vendors), collections, vendors and planning
+   * navigation have all been commented out for this bridal-only build. */
+  /*
   {
     id: 'groom',
     label: 'Groom',
@@ -314,6 +322,7 @@ export const PRIMARY_NAV: NavItem[] = [
       mediaKey: 'editorial-arrival',
     },
   },
+  */
   {
     id: 'inspiration',
     label: 'Inspiration',
@@ -326,21 +335,25 @@ export const FOOTER_NAV: NavColumn[] = [
     title: 'Shop',
     links: [
       { label: 'Bride', to: routes.collectionsBridal },
-      { label: 'Groom', to: routes.collectionsGroom },
-      { label: 'Accessories', to: routes.collectionsAccessories },
-      { label: 'Jewellery', to: routes.collectionsJewellery },
-      { label: 'Beauty', to: routes.collectionsBeauty },
-      { label: 'Ceremony', to: routes.collectionsCeremony },
+      // Groom, accessories, jewellery, beauty and ceremony links have been
+      // commented out for this bridal-only build.
+      // { label: 'Groom', to: routes.collectionsGroom },
+      // { label: 'Accessories', to: routes.collectionsAccessories },
+      // { label: 'Jewellery', to: routes.collectionsJewellery },
+      // { label: 'Beauty', to: routes.collectionsBeauty },
+      // { label: 'Ceremony', to: routes.collectionsCeremony },
     ],
   },
   {
     title: 'Wedding',
     links: [
-      { label: 'Vendors', to: routes.vendors },
-      { label: 'Planning', to: routes.planning },
-      { label: 'Checklist', to: routes.planningChecklist },
-      { label: 'Budget', to: routes.planningBudget },
       { label: 'Inspiration', to: routes.inspiration },
+      // Vendors and planning links have been commented out for this
+      // bridal-only build.
+      // { label: 'Vendors', to: routes.vendors },
+      // { label: 'Planning', to: routes.planning },
+      // { label: 'Checklist', to: routes.planningChecklist },
+      // { label: 'Budget', to: routes.planningBudget },
     ],
   },
   {

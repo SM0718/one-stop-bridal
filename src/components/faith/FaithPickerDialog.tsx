@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+// The '/'planning' intent redirect was commented out for this bridal-only build.
+// import { useNavigate } from '@tanstack/react-router';
 import { useUIStore } from '@/stores/ui';
 import { useWeddingStore } from '@/stores/wedding';
 import { selectContext } from '@/stores/wedding';
@@ -22,14 +23,15 @@ import { FaithChooser, type FaithSelection } from './FaithChooser';
 export function FaithPickerDialog() {
   const open = useUIStore((s) => s.faithPickerOpen);
   const setOpen = useUIStore((s) => s.setFaithPickerOpen);
-  const intent = useUIStore((s) => s.faithPickerIntent);
+  // The planning intent was commented out for this bridal-only build.
+  // const intent = useUIStore((s) => s.faithPickerIntent);
 
   const profile = useWeddingStore((s) => s.profile);
   const setFaith = useWeddingStore((s) => s.setFaith);
   const updateProfile = useWeddingStore((s) => s.updateProfile);
   const events = useWeddingStore((s) => s.events);
   const context = useWeddingStore(selectContext);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [selection, setSelection] = useState<FaithSelection>({
     faith: profile.faith,
@@ -57,7 +59,8 @@ export function FaithPickerDialog() {
     });
     setFaith(selection.faith, { reseedEvents: !hasCustomisedEvents });
     setOpen(false);
-    if (intent === 'planning') void navigate({ to: '/planning' });
+    // The '/planning' redirect was commented out for this bridal-only build.
+    // if (intent === 'planning') void navigate({ to: '/planning' });
   }
 
   return (
@@ -68,7 +71,7 @@ export function FaithPickerDialog() {
           <DialogTitle>Which wedding are you planning?</DialogTitle>
           <DialogDescription>
             {context.primary.id !== 'CUSTOM'
-              ? `Currently showing ${context.label}. Changing this updates your collections, vendors and checklist.`
+              ? `Currently showing ${context.label}. Changing this updates your collections and edits.`
               : 'Choose the traditions that shape your wedding.'}
           </DialogDescription>
         </DialogHeader>

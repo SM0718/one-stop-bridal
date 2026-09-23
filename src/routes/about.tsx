@@ -132,7 +132,7 @@ export function AboutPage() {
           eyebrow="Trust"
           title="What verification does and does not mean"
           body="A verified badge means we have checked that a business is registered and that its contact details are real. It does not mean we recommend them, and it is not a rating. Where a business is not verified, we say so plainly rather than hiding it."
-          action={{ label: 'See how vendors are listed', href: routes.vendors }}
+          action={{ label: 'Browse bridal collections', href: routes.collectionsBridal }}
         />
       </Section>
 

@@ -659,6 +659,83 @@ export interface CartLine {
 }
 
 /* ==========================================================================
+   Bridal blueprint (personalisation onboarding)
+   ========================================================================== */
+
+/**
+ * The wedding context a couple builds through the "Wedding Blueprint"
+ * onboarding. This is deliberately broader than `WeddingProfile`: it tracks
+ * both sides of the family, regional/cultural contexts, a lead-time window and
+ * the ordered set of celebrations, so the bridal catalogue can be personalised
+ * without ever assuming a single primary religion.
+ */
+
+export type BlueprintTimeline =
+  | 'under-30-days'
+  | '1-3-months'
+  | '3-6-months'
+  | '6-12-months'
+  | '12-plus-months'
+  | 'not-decided';
+
+export type BlueprintBudget = 'intimate' | 'classic' | 'grand' | 'prefer-not-to-say';
+
+/** How the partner's side relates to the bride's. */
+export type PartnerContextMode = 'same' | 'different' | 'interfaith' | 'not-specified';
+
+export interface BlueprintFaithGroup {
+  faithIds: FaithId[];
+  culturalContexts: string[];
+  /** True when the couple prefers not to name a tradition */
+  preferNotToSpecify: boolean;
+  /** Free-text label when a custom/regional tradition is used */
+  customLabel: string;
+}
+
+export interface BlueprintPartner extends BlueprintFaithGroup {
+  mode: PartnerContextMode;
+}
+
+export interface BlueprintTimelineValue {
+  timeframe: BlueprintTimeline | null;
+  /** ISO yyyy-MM-dd when a specific date is known */
+  weddingDate: string | null;
+}
+
+export interface BlueprintEventList {
+  /** Ordered event template ids (order matters for the planner/checklist) */
+  eventIds: string[];
+  /** Ordered names of custom celebrations added by the couple */
+  customEventNames: string[];
+}
+
+export interface BridalBlueprint {
+  id: string;
+  bride: BlueprintFaithGroup;
+  partner: BlueprintPartner;
+  timeline: BlueprintTimelineValue;
+  events: BlueprintEventList;
+  budget: BlueprintBudget;
+  completed: boolean;
+  completedAt: string | null;
+  updatedAt: string;
+}
+
+/** In-progress answers, kept so a partially-completed onboarding can resume. */
+export interface BlueprintDraft {
+  /** The user has begun the onboarding — distinct from the current step below */
+  started: boolean;
+  /** 0 = Cultural Roots, 1 = Timeline, 2 = Events, 3 = Budget */
+  step: number;
+  bride: BlueprintFaithGroup;
+  partner: BlueprintPartner;
+  timeline: BlueprintTimelineValue;
+  eventIds: string[];
+  customEventNames: string[];
+  budget: BlueprintBudget;
+}
+
+/* ==========================================================================
    Shared primitives
    ========================================================================== */
 

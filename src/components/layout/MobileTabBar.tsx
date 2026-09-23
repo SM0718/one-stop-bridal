@@ -1,12 +1,13 @@
 import { Link, useRouterState } from '@tanstack/react-router';
-import { Calendar, Category, Heart, Home2, User } from 'iconsax-react';
+import { Category, Heart, Home2, User } from 'iconsax-react';
 import { selectWishlistCount, useWishlistStore } from '@/stores/wishlist';
 import { cn } from '@/lib/utils';
 
 const ITEMS = [
   { label: 'Home', href: '/', Icon: Home2, match: (p: string) => p === '/' },
   { label: 'Collections', href: '/collections', Icon: Category, match: (p: string) => p.startsWith('/collections') || p.startsWith('/product') },
-  { label: 'Planning', href: '/planning', Icon: Calendar, match: (p: string) => p.startsWith('/planning') },
+  // Planning has been commented out for this bridal-only build.
+  // { label: 'Planning', href: '/planning', Icon: Calendar, match: (p: string) => p.startsWith('/planning') },
   { label: 'Saved', href: '/wishlist', Icon: Heart, match: (p: string) => p.startsWith('/wishlist') },
   { label: 'Account', href: '/account', Icon: User, match: (p: string) => p.startsWith('/account') || p.startsWith('/cart') },
 ];
@@ -25,7 +26,7 @@ export function MobileTabBar() {
       className="print-hidden fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/97 backdrop-blur-sm lg:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <ul className="grid grid-cols-5">
+      <ul className="grid grid-cols-4">
         {ITEMS.map(({ label, href, Icon, match }) => {
           const active = match(pathname);
           return (

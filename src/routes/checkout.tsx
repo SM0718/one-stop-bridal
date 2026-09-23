@@ -19,6 +19,7 @@ import { Field, Input, Textarea } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { EmptyState } from '@/components/ui/empty-state';
 import { MediaImage } from '@/components/ui/media';
+import { AnimatedList } from '@/components/magicui/animated-list';
 
 type CheckoutValues = z.input<typeof checkoutSchema>;
 
@@ -88,12 +89,38 @@ export function CheckoutPage() {
 
           <div className="mt-8 border border-border p-5">
             <p className="eyebrow mb-3">What would happen next</p>
-            <ol className="space-y-3 text-sm text-ink-soft">
-              <li>1. The retailer confirms availability and, for made-to-measure pieces, books a fitting.</li>
-              <li>2. You approve the final measurements and the quote in writing.</li>
-              <li>3. Payment is taken by the retailer, not by us.</li>
-              <li>4. Delivery or collection is arranged against the confirmed timeline.</li>
-            </ol>
+            <AnimatedList delay={900} className="gap-3">
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-gold/40 font-display text-sm text-gold-deep">
+                  4
+                </span>
+                <p className="text-sm leading-relaxed text-ink-soft">
+                  Delivery or collection is arranged against the confirmed timeline.
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-gold/40 font-display text-sm text-gold-deep">
+                  3
+                </span>
+                <p className="text-sm leading-relaxed text-ink-soft">Payment is taken by the retailer, not by us.</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-gold/40 font-display text-sm text-gold-deep">
+                  2
+                </span>
+                <p className="text-sm leading-relaxed text-ink-soft">
+                  You approve the final measurements and the quote in writing.
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-gold/40 font-display text-sm text-gold-deep">
+                  1
+                </span>
+                <p className="text-sm leading-relaxed text-ink-soft">
+                  The retailer confirms availability and, for made-to-measure pieces, books a fitting.
+                </p>
+              </div>
+            </AnimatedList>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -101,7 +128,7 @@ export function CheckoutPage() {
               <Link to={routes.collections}>Keep browsing</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link to={routes.planning}>Open your wedding plan</Link>
+              <Link to={routes.inspiration}>Read inspiration</Link>
             </Button>
           </div>
         </div>

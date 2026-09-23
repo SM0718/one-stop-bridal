@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { Link, useParams } from '@tanstack/react-router';
-import { ArrowLeft2, ArrowRight2, Heart, MessageText1, SearchNormal1, Share } from 'iconsax-react';
+import { ArrowLeft2, Heart, MessageText1, SearchNormal1, Share } from 'iconsax-react';
+// ArrowRight2 was only used by the 'add to your wedding plan' link, which was
+// commented out for this bridal-only build.
+// import { ArrowRight2 } from 'iconsax-react';
 import { useProduct, useRelatedProducts, useWeddingContext } from '@/hooks/queries';
 import { useDocumentMeta, schema } from '@/hooks/useDocumentMeta';
 import { useCartStore } from '@/stores/cart';
@@ -17,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MediaImage } from '@/components/ui/media';
 import { Separator } from '@/components/ui/separator';
+import { BorderBeam } from '@/components/magicui/border-beam';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { ProductCard } from '@/components/product/ProductCard';
 import { SaveButton } from '@/components/product/SaveButton';
@@ -109,15 +113,24 @@ export function ProductDetailPage() {
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           {/* Gallery */}
           <div className="min-w-0">
-            <MediaImage
-              mediaKey={product.images[activeImage]?.mediaKey}
-              alt={product.images[activeImage]?.alt ?? product.name}
-              aspect="editorial"
-              priority
-              sizes="(min-width: 1024px) 48vw, 100vw"
-              width={1000}
-              height={1250}
-            />
+            <div className="relative overflow-hidden rounded-lg">
+              <MediaImage
+                mediaKey={product.images[activeImage]?.mediaKey}
+                alt={product.images[activeImage]?.alt ?? product.name}
+                aspect="editorial"
+                priority
+                sizes="(min-width: 1024px) 48vw, 100vw"
+                width={1000}
+                height={1250}
+              />
+              <BorderBeam
+                size={120}
+                duration={8}
+                delay={0.4}
+                colorFrom="hsl(var(--gold))"
+                colorTo="hsl(var(--champagne-soft))"
+              />
+            </div>
 
             {product.images.length > 1 ? (
               <ul className="rail mt-3 gap-3" aria-label="Product images">
@@ -153,7 +166,7 @@ export function ProductDetailPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 {retailer ? (
-                  <Link to={routes.vendors} className="link-quiet text-sm text-ink-soft">
+                  <Link to={routes.retailers} className="link-quiet text-sm text-ink-soft">
                     {retailer.name}
                   </Link>
                 ) : null}
@@ -448,13 +461,14 @@ export function ProductDetailPage() {
                   </li>
                 ))}
               </ul>
-              <Link
+              {/* The wedding-plan link was commented out for this bridal-only build. */}
+              {/* <Link
                 to={routes.planningEvents}
                 className="mt-4 inline-flex items-center gap-2 text-xs font-medium text-ink link-quiet"
               >
                 Add to your wedding plan
                 <ArrowRight2 size={13} variant="Linear" />
-              </Link>
+              </Link> */}
             </div>
           ) : null}
         </div>

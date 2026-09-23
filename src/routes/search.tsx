@@ -33,7 +33,7 @@ export function SearchPage() {
   useDocumentMeta({
     title: hasQuery ? `Search: ${term}` : 'Search',
     description:
-      'Search pieces, wedding professionals, collections, ceremonies and guides across every tradition.',
+      'Search pieces, collections and guides across every tradition.',
     canonicalPath: routes.search,
     noIndex: true,
   });
@@ -43,7 +43,7 @@ export function SearchPage() {
       <PageHeader
         eyebrow="Search"
         title="Search everything"
-        standfirst={`Pieces, wedding professionals, collections, ceremonies and guides. Results are ranked for your ${context.label} context.`}
+        standfirst={`Pieces, collections and guides. Results are ranked for your ${context.label} context.`}
         breadcrumbs={[{ label: 'Home', href: routes.home }, { label: 'Search' }]}
       />
 
@@ -69,7 +69,7 @@ export function SearchPage() {
             id="search-input"
             value={term}
             onChange={(e) => setTerm(e.target.value)}
-            placeholder="Bridal lehenga, mehendi artist, chuppah…"
+            placeholder="Bridal lehenga, bridal saree, wedding gown…"
             className="h-12 w-full border border-input bg-pearl pl-11 pr-4 text-[0.9375rem] text-ink transition-colors placeholder:text-ink-muted/70 focus:border-ink focus:outline-none"
           />
         </div>
@@ -88,10 +88,10 @@ export function SearchPage() {
         ) : !hasQuery ? (
           <EmptyState
             title="What are you looking for?"
-            description="Searching by a ceremony name often works better than by product — try “Anand Karaj”, “walima” or “chuppah”."
+            description="Searching by silhouette, fabric or piece often works better than a puzzle term — try “lehenga”, “saree” or “gown”."
             action={
               <div className="flex flex-wrap justify-center gap-2">
-                {['Bridal lehenga', 'Mehendi artist', 'Modest bridalwear', 'Wedding photographer', 'Sherwani'].map(
+                {['Bridal lehenga', 'Bridal saree', 'Modest bridalwear', 'Wedding gown', 'Made to measure'].map(
                   (suggestion) => (
                     <button
                       key={suggestion}
@@ -114,15 +114,16 @@ export function SearchPage() {
         ) : data && data.total === 0 ? (
           <EmptyState
             title={`Nothing matched “${term}”`}
-            description="Try a shorter phrase. Search covers pieces, businesses, collections, ceremonies and guides together."
+            description="Try a shorter phrase. Search covers pieces, collections and guides."
             action={
               <div className="flex flex-wrap justify-center gap-3">
                 <Button asChild variant="outline">
                   <Link to={routes.collections}>Browse collections</Link>
                 </Button>
-                <Button asChild variant="outline">
+                {/* The vendor directory has been commented out for this bridal-only build. */}
+                {/* <Button asChild variant="outline">
                   <Link to={routes.vendors}>Browse vendors</Link>
-                </Button>
+                </Button> */}
               </div>
             }
           />

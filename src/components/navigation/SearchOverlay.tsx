@@ -57,7 +57,7 @@ export function SearchOverlay() {
             autoFocus
             value={term}
             onChange={(e) => setTerm(e.target.value)}
-            placeholder="Search collections, vendors, ceremonies or guides"
+            placeholder="Search collections, ceremonies or guides"
             aria-label="Search"
             className="h-8 w-full bg-transparent text-base text-ink outline-none placeholder:text-ink-muted/70"
           />
@@ -108,9 +108,10 @@ export function SearchOverlay() {
                 <Link to="/collections" onClick={close} className="text-sm font-medium text-ink link-quiet">
                   Browse collections
                 </Link>
-                <Link to="/vendors" onClick={close} className="text-sm font-medium text-ink link-quiet">
+                {/* The vendor directory has been commented out for this bridal-only build. */}
+                {/* <Link to="/vendors" onClick={close} className="text-sm font-medium text-ink link-quiet">
                   Browse vendors
-                </Link>
+                </Link> */}
               </div>
             </div>
           ) : null}

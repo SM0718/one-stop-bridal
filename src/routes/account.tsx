@@ -16,7 +16,10 @@ import { useWeddingContext } from '@/hooks/queries';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { useWishlistStore } from '@/stores/wishlist';
 import { formatCount, formatDate, formatPrice } from '@/lib/format';
-import { selectBudgetTotals, selectTaskProgress } from '@/stores/wedding';
+import { selectBudgetTotals } from '@/stores/wedding';
+// The task-progress selector was only used by the checklist preview, which was
+// commented out for this bridal-only build.
+// import { selectTaskProgress } from '@/stores/wedding';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -25,7 +28,8 @@ import { Field, Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FaithSelectorButton } from '@/components/faith/FaithPickerDialog';
-import { Progress } from '@/components/ui/progress';
+// The checklist progress bar was commented out for this bridal-only build.
+// import { Progress } from '@/components/ui/progress';
 
 /* ==========================================================================
    Sign-in gate shared by the account screens
@@ -208,7 +212,6 @@ export function AccountOverviewPage() {
   const signOut = useAuthStore((s) => s.signOut);
   const context = useWeddingContext();
   const profile = useWeddingStore((s) => s.profile);
-  const tasks = useWeddingStore(selectTaskProgress);
   const budget = useWeddingStore(selectBudgetTotals);
   const savedCount = useWishlistStore((s) => s.items.length);
   const resetWedding = useWeddingStore((s) => s.resetWedding);
@@ -235,17 +238,18 @@ export function AccountOverviewPage() {
             <FaithSelectorButton className="inline-flex items-center gap-2 border border-border px-3 py-2 text-xs text-ink transition-colors hover:border-ink" />
           </div>
 
-          <dl className="mt-6 grid gap-6 border-t border-border pt-5 sm:grid-cols-4">
+          <dl className="mt-6 grid gap-6 border-t border-border pt-5 sm:grid-cols-3">
             <div>
               <dt className="eyebrow">Ceremonies</dt>
               <dd className="mt-1.5 font-display text-xl text-ink">{context.events.length}</dd>
             </div>
-            <div>
+            {/* The checklist/tasks stat was commented out for this bridal-only build. */}
+            {/* <div>
               <dt className="eyebrow">Tasks done</dt>
               <dd className="mt-1.5 font-display text-xl text-ink">
                 {tasks.done}/{tasks.total}
               </dd>
-            </div>
+            </div> */}
             <div>
               <dt className="eyebrow">Budget</dt>
               <dd className="mt-1.5 font-display text-xl text-ink">
@@ -258,12 +262,14 @@ export function AccountOverviewPage() {
             </div>
           </dl>
 
-          <Progress value={tasks.percent} className="mt-5" aria-label="Checklist progress" />
+          {/* The checklist progress bar was commented out for this bridal-only build. */}
+          {/* <Progress value={tasks.percent} className="mt-5" aria-label="Checklist progress" /> */}
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <Button asChild variant="outline" size="sm">
+            {/* The planner link was commented out for this bridal-only build. */}
+            {/* <Button asChild variant="outline" size="sm">
               <Link to={routes.planning}>Open the planner</Link>
-            </Button>
+            </Button> */}
             <Button asChild variant="outline" size="sm">
               <Link to={routes.accountProfile}>Edit wedding profile</Link>
             </Button>
@@ -334,8 +340,10 @@ export function AccountProfilePage() {
   const setFaith = useWeddingStore((s) => s.setFaith);
   const toggleSecondary = useWeddingStore((s) => s.toggleSecondaryFaith);
   const completeOnboarding = useWeddingStore((s) => s.completeOnboarding);
-  const restoreOnboarding = useWeddingStore((s) => s.restartOnboarding);
-  const navigate = useNavigate();
+  // The 'run personalisation again' action was commented out for this bridal-only build.
+  // const restartOnboarding = useWeddingStore((s) => s.restartOnboarding);
+  // The personalisation flow was commented out for this bridal-only build.
+  // const navigate = useNavigate();
 
   if (!user) return <SignInPanel />;
 
@@ -511,7 +519,8 @@ export function AccountProfilePage() {
         >
           Save changes
         </Button>
-        <Button
+        {/* The personalisation flow was commented out for this bridal-only build. */}
+        {/* <Button
           variant="ghost"
           onClick={() => {
             restoreOnboarding();
@@ -519,7 +528,7 @@ export function AccountProfilePage() {
           }}
         >
           Run the personalisation again
-        </Button>
+        </Button> */}
       </section>
     </div>
   );

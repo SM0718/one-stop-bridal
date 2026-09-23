@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type {
+  BlueprintDraft,
+  BridalBlueprint,
   BudgetLine,
   FaithId,
   Guest,
@@ -11,6 +13,23 @@ import type {
 import { resolveWeddingContext } from '@/data/faiths';
 import { DEFAULT_BUDGET_SPLIT, phaseFromMonthsBefore } from '@/data/planning';
 import { suggestEventDate } from '@/lib/format';
+
+export const EMPTY_BLUEPRINT_DRAFT: BlueprintDraft = {
+  started: false,
+  step: 0,
+  bride: { faithIds: [], culturalContexts: [], preferNotToSpecify: false, customLabel: '' },
+  partner: {
+    faithIds: [],
+    culturalContexts: [],
+    preferNotToSpecify: false,
+    customLabel: '',
+    mode: 'not-specified',
+  },
+  timeline: { timeframe: null, weddingDate: null },
+  eventIds: [],
+  customEventNames: [],
+  budget: 'prefer-not-to-say',
+};
 
 const EMPTY_PROFILE: WeddingProfile = {
   faith: null,
@@ -32,6 +51,19 @@ interface WeddingState {
   tasks: PlanningTask[];
   budgetLines: BudgetLine[];
   guests: Guest[];
+
+  /* Bridal blueprint (personalisation onboarding) */
+  blueprint: BridalBlueprint | null;
+  draft: BlueprintDraft;
+  blueprintSkipped: boolean;
+  /** Ephemeral UI flag — intentionally not persisted */
+  blueprintOpen: boolean;
+  openBridalBlueprint: () => void;
+  closeBridalBlueprint: (options?: { skip?: boolean }) => void;
+  setBlueprintDraft: (patch: Partial<BlueprintDraft>) => void;
+  completeBlueprint: () => void;
+  restoreBlueprint: (blueprint: BridalBlueprint) => void;
+  resetBlueprint: () => void;
 
   setFaith: (faith: FaithId | null, options?: { reseedEvents?: boolean }) => void;
   toggleSecondaryFaith: (faith: FaithId) => void;
@@ -101,6 +133,85 @@ export const useWeddingStore = create<WeddingState>()(
       tasks: [],
       budgetLines: [],
       guests: [],
+
+      blueprint: null,
+      draft: EMPTY_BLUEPRINT_DRAFT,
+      blueprintSkipped: false,
+      blueprintOpen: false,
+
+      openBridalBlueprint: () => set({ blueprintOpen: true }),
+
+      closeBridalBlueprint: (options) =>
+        set((state) => ({
+          blueprintOpen: false,
+          /* Skipping (or closing) deliberately marks the blueprint as declined
+             so the onboarding is not re-forced on every visit. */
+          blueprintSkipped: options?.skip ? true : state.blueprintSkipped,
+        })),
+
+      setBlueprintDraft: (patch) => {
+        const merged: BlueprintDraft = {
+          ...get().draft,
+          ...patch,
+          bride: { ...get().draft.bride, ...(patch.bride ?? {}) },
+          partner: { ...get().draft.partner, ...(patch.partner ?? {}) },
+          timeline: { ...get().draft.timeline, ...(patch.timeline ?? {}) },
+        };
+        set({ draft: merged });
+      },
+
+      completeBlueprint: () => {
+        const { draft, blueprint } = get();
+        const brideIds = draft.bride.preferNotToSpecify ? [] : draft.bride.faithIds;
+        const partnerIds =
+          draft.partner.mode === 'same'
+            ? brideIds
+            : draft.partner.mode === 'different' || draft.partner.mode === 'interfaith'
+              ? draft.partner.preferNotToSpecify
+                ? []
+                : draft.partner.faithIds
+              : [];
+        const traditionIds = [...brideIds, ...partnerIds.filter((id) => !brideIds.includes(id))];
+        const customLabel = [draft.bride.customLabel, draft.partner.customLabel].filter(Boolean).join(' + ');
+
+        const next: BridalBlueprint = {
+          id: blueprint?.id ?? `bp-${Math.random().toString(36).slice(2, 9)}`,
+          bride: { ...draft.bride },
+          partner: { ...draft.partner, faithIds: draft.partner.mode === 'same' ? brideIds : draft.partner.faithIds },
+          timeline: { timeframe: draft.timeline.timeframe, weddingDate: draft.timeline.weddingDate },
+          events: { eventIds: [...draft.eventIds], customEventNames: [...draft.customEventNames] },
+          budget: draft.budget,
+          completed: true,
+          completedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        /* Feed the existing personalisation machinery: the primary tradition
+           becomes the catalogue faith and the rest ride along as secondary, so
+           every existing filter/context responds immediately. */
+        const profilePatch: Partial<WeddingProfile> = {
+          faith: (traditionIds[0] as FaithId | null) ?? null,
+          secondaryFaiths: traditionIds.slice(1) as FaithId[],
+          customFaithLabel: customLabel,
+          weddingDate: draft.timeline.weddingDate,
+        };
+        set({
+          blueprint: next,
+          profile: { ...get().profile, ...profilePatch },
+          blueprintSkipped: false,
+          blueprintOpen: false,
+          draft: EMPTY_BLUEPRINT_DRAFT,
+        });
+      },
+
+      restoreBlueprint: (blueprint) =>
+        set((state) => ({
+          blueprint,
+          blueprintSkipped: blueprint.completed ? false : state.blueprintSkipped,
+        })),
+
+      resetBlueprint: () =>
+        set({ blueprint: null, blueprintSkipped: false, draft: EMPTY_BLUEPRINT_DRAFT }),
 
       setFaith: (faith, options) => {
         const { events, profile } = get();
@@ -291,7 +402,32 @@ export const useWeddingStore = create<WeddingState>()(
     }),
     {
       name: 'osb:wedding',
-      version: 1,
+      version: 2,
+      partialize: (state) => ({
+        profile: state.profile,
+        events: state.events,
+        tasks: state.tasks,
+        budgetLines: state.budgetLines,
+        guests: state.guests,
+        blueprint: state.blueprint,
+        draft: state.draft,
+        blueprintSkipped: state.blueprintSkipped,
+      }),
+      migrate: (persisted) => {
+        const p = (persisted ?? {}) as Partial<WeddingState>;
+        return {
+          ...p,
+          blueprint: p.blueprint ?? null,
+          blueprintSkipped: p.blueprintSkipped ?? false,
+          draft: {
+            ...EMPTY_BLUEPRINT_DRAFT,
+            ...p.draft,
+            bride: { ...EMPTY_BLUEPRINT_DRAFT.bride, ...p.draft?.bride },
+            partner: { ...EMPTY_BLUEPRINT_DRAFT.partner, ...p.draft?.partner },
+            timeline: { ...EMPTY_BLUEPRINT_DRAFT.timeline, ...p.draft?.timeline },
+          },
+        } as WeddingState;
+      },
     },
   ),
 );

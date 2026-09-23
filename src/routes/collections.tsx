@@ -9,8 +9,12 @@ import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { PageHeader } from '@/components/ui/breadcrumb';
 import { MediaImage } from '@/components/ui/media';
 import { Section, SectionHeader, EditorialSplit } from '@/components/editorial/Section';
+import { BlurFade } from '@/components/magicui/blur-fade';
 import { CatalogueResults } from '@/components/product/CatalogueResults';
-import { Button } from '@/components/ui/button';
+import { BridalBlueprintGate } from '@/components/blueprint/BridalBlueprintGate';
+import { BridalPersonalization } from '@/components/blueprint/BridalPersonalization';
+// The 'plan your wedding' button was commented out for this bridal-only build.
+// import { Button } from '@/components/ui/button';
 import { RouteNotFound } from './status';
 
 /* ==========================================================================
@@ -21,20 +25,26 @@ export function CollectionsIndexPage() {
   useDocumentMeta({
     title: 'Collections',
     description:
-      'Browse bridal, groom, accessory, jewellery, beauty and ceremony collections, organised by the ceremonies your wedding actually includes.',
+      'Browse bridal collections and curated edits, organised by the ceremonies your wedding actually includes.',
     canonicalPath: routes.collections,
   });
 
   const context = useWeddingContext();
   const { data: collections } = useCollections();
 
+  const bridalGroups = CATEGORY_GROUPS.filter((g) => g.id === 'bridal');
+  const bridalCategoryIds = new Set(productCategoriesInGroup('bridal').map((c) => c.id));
+  const bridalEdits = (collections ?? COLLECTIONS).filter((c) =>
+    c.categoryIds.some((id) => bridalCategoryIds.has(id)),
+  );
+
   return (
     <>
       <div className="container pt-10 lg:pt-14">
         <PageHeader
           eyebrow="Collections"
-          title="Browse by group, tradition or ceremony"
-          standfirst="Six groups covering everything a wedding involves. Your selections narrow every list to what is relevant to your ceremonies and traditions."
+          title="Browse bridal, organised by what it is"
+          standfirst="Groups covering the pieces a wedding involves. Your selections narrow every list to what is relevant to your ceremonies and traditions."
           breadcrumbs={[{ label: 'Home', href: routes.home }, { label: 'Collections' }]}
         />
       </div>
@@ -42,16 +52,19 @@ export function CollectionsIndexPage() {
       {/* Category groups: uneven editorial grid rather than a row of equal cards */}
       <Section>
         <div className="grid gap-6 lg:grid-cols-12">
-          {CATEGORY_GROUPS.map((group, index) => {
+          {bridalGroups.map((group, index) => {
             const categories = productCategoriesInGroup(group.id);
             const lead = categories[0];
             const wide = index % 3 === 0;
 
             return (
-              <article
+              <BlurFade
                 key={group.id}
+                delay={index * 0.12}
+                inView
                 className={wide ? 'lg:col-span-7' : 'lg:col-span-5'}
               >
+                <article className="h-full">
                 <Link to={routes.collection(group.slug)} className="group block">
                   <MediaImage
                     mediaKey={lead?.mediaKey ?? 'editorial-pillars'}
@@ -76,7 +89,8 @@ export function CollectionsIndexPage() {
                     />
                   </div>
                 </Link>
-              </article>
+                </article>
+              </BlurFade>
             );
           })}
         </div>
@@ -90,9 +104,10 @@ export function CollectionsIndexPage() {
           description="Curated around a specific wedding, ceremony or constraint rather than a season."
         />
         <ul className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-          {(collections ?? COLLECTIONS).map((collection) => (
+          {bridalEdits.map((collection, index) => (
             <li key={collection.id}>
-              <Link to={routes.collection(collection.slug)} className="group block">
+              <BlurFade delay={index * 0.1} inView className="h-full">
+                <Link to={routes.collection(collection.slug)} className="group block">
                 <MediaImage
                   mediaKey={collection.mediaKey}
                   aspect="portrait"
@@ -101,7 +116,8 @@ export function CollectionsIndexPage() {
                 />
                 <h3 className="mt-4 font-display text-xl text-ink">{collection.name}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-soft">{collection.description}</p>
-              </Link>
+                </Link>
+              </BlurFade>
             </li>
           ))}
         </ul>
@@ -123,7 +139,7 @@ export function CollectionsIndexPage() {
             .map((id) => getProductCategory(id)?.name.toLowerCase())
             .filter(Boolean)
             .join(', ')}. Change your wedding context from the header at any time and every list re-orders around it.`}
-          action={{ label: 'Open your wedding plan', href: routes.planning }}
+          action={{ label: 'Browse all bridal', href: routes.collectionsBridal }}
         />
       </Section>
     </>
@@ -164,6 +180,9 @@ export function CollectionGroupPage() {
   if (!group && !collection) {
     return <RouteNotFound />;
   }
+  if (group && group.id !== 'bridal') {
+    return <RouteNotFound />;
+  }
 
   const title = group?.name ?? collection?.name ?? '';
   const description =
@@ -183,6 +202,9 @@ export function CollectionGroupPage() {
         ]}
       />
 
+      {/* The category rail below is bridal-only too; groups other than bridal
+          are rejected above. The 'plan your wedding' button at the bottom of
+          this page was commented out along with the planning feature. */}
       {group ? (
         <nav aria-label="Categories in this group" className="mt-6">
           <ul className="rail gap-2 pb-1">
@@ -226,25 +248,24 @@ export function CollectionGroupPage() {
         </p>
       ) : null}
 
+      {/* Bridal-only personalisation: the Wedding Blueprint gate + the rails
+          it drives appear solely on the bridal group page. */}
+      {group?.id === 'bridal' ? <BridalBlueprintGate /> : null}
+
+      {group?.id === 'bridal' ? <BridalPersonalization scopeCategoryIds={scopeCategoryIds} /> : null}
+
       <div className="mt-10 pb-section">
         <CatalogueResults
           scopeCategoryIds={scopeCategoryIds}
           context={context}
           emptyTitle="No pieces match these filters"
           emptyDescription="Try removing a filter, or widening the price range. Pieces priced on enquiry appear in every price band."
-          columns={group?.id === 'bridal' || group?.id === 'groom' ? 3 : 4}
+          columns={group?.id === 'bridal' ? 3 : 4}
         />
       </div>
 
-      <div className="border-t border-border py-10">
-        <Button
-          asChild
-          variant="outline"
-          className="h-auto w-full whitespace-normal py-3 text-center sm:h-11 sm:w-auto"
-        >
-          <Link to={routes.planning}>Plan your wedding around these pieces</Link>
-        </Button>
-      </div>
+      {/* The 'plan your wedding around these pieces' button was commented out
+          for this bridal-only build. */}
     </div>
   );
 }

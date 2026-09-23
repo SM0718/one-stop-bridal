@@ -2,19 +2,20 @@ import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { routes } from '@/config/routes';
 import { useWishlistStore } from '@/stores/wishlist';
-import { useProductsByIds, useVendors, useArticles } from '@/hooks/queries';
+import { useProductsByIds, useArticles } from '@/hooks/queries';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { formatCount } from '@/lib/format';
 import { PageHeader } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { ProductCard } from '@/components/product/ProductCard';
-import { VendorCard } from '@/components/vendor/VendorCard';
+// Vendor saving has been commented out for this bridal-only build.
+// import { VendorCard } from '@/components/vendor/VendorCard';
 import { MediaImage } from '@/components/ui/media';
 import { cn } from '@/lib/utils';
 import { INSPIRATION } from '@/data/inspiration';
 
-type Tab = 'all' | 'product' | 'vendor' | 'inspiration';
+type Tab = 'all' | 'product' | 'inspiration';
 
 /**
  * Saved items as cards, filterable by kind. Collections can be created on the
@@ -23,7 +24,7 @@ type Tab = 'all' | 'product' | 'vendor' | 'inspiration';
 export function WishlistPage() {
   useDocumentMeta({
     title: 'Saved items',
-    description: 'Pieces, vendors and reading you have saved.',
+    description: 'Pieces and reading you have saved.',
     canonicalPath: routes.wishlist,
     noIndex: true,
   });
@@ -36,24 +37,25 @@ export function WishlistPage() {
   const inScope = items.filter((item) => collectionId === 'all' || item.collectionId === collectionId);
 
   const productIds = inScope.filter((i) => i.kind === 'product').map((i) => i.refId);
-  const vendorIds = inScope.filter((i) => i.kind === 'vendor').map((i) => i.refId);
+  // Vendor saving has been commented out for this bridal-only build.
+  // const vendorIds = inScope.filter((i) => i.kind === 'vendor').map((i) => i.refId);
   const articleIds = inScope.filter((i) => i.kind === 'inspiration').map((i) => i.refId);
 
   const { data: products } = useProductsByIds(productIds);
-  const { data: vendorPage } = useVendors({ pageSize: 50 });
   const { data: articles } = useArticles({});
 
-  const savedVendors = (vendorPage?.items ?? []).filter((v) => vendorIds.includes(v.id));
+  // Vendor lookup has been commented out for this bridal-only build.
+  // const { data: vendorPage } = useVendors({ pageSize: 50 });
+  // const savedVendors = (vendorPage?.items ?? []).filter((v) => vendorIds.includes(v.id));
   const savedArticles = (articles ?? INSPIRATION).filter((a) => articleIds.includes(a.id));
 
   const showProducts = tab === 'all' || tab === 'product';
-  const showVendors = tab === 'all' || tab === 'vendor';
+  // const showVendors = tab === 'all' || tab === 'vendor';
   const showArticles = tab === 'all' || tab === 'inspiration';
 
   const hasAnything =
-    (showProducts && (products?.length ?? 0) > 0) ||
-    (showVendors && savedVendors.length > 0) ||
-    (showArticles && savedArticles.length > 0);
+    (showProducts && (products?.length ?? 0) > 0) || (showArticles && savedArticles.length > 0);
+  // (showVendors && savedVendors.length > 0) ||
 
   return (
     <div className="container pt-10 lg:pt-14">
@@ -62,7 +64,7 @@ export function WishlistPage() {
         title="Your saved items"
         standfirst={
           items.length === 0
-            ? 'Save pieces, vendors and guides as you browse. Nothing is shared with anyone until you send an enquiry.'
+            ? 'Save pieces and guides as you browse. Nothing is shared with anyone until you send an enquiry.'
             : `${formatCount(items.length, 'item')} saved across ${formatCount(collections.length, 'collection')}.`
         }
         breadcrumbs={[{ label: 'Home', href: routes.home }, { label: 'Saved' }]}
@@ -79,15 +81,16 @@ export function WishlistPage() {
         <div className="py-14">
           <EmptyState
             title="Nothing saved yet"
-            description="Tap the heart on any piece or business to keep it here. Saved items stay on this device until you sign in."
+            description="Tap the heart on any piece or guide to keep it here. Saved items stay on this device until you sign in."
             action={
               <div className="flex flex-wrap justify-center gap-3">
                 <Button asChild>
                   <Link to={routes.collections}>Browse collections</Link>
                 </Button>
-                <Button asChild variant="outline">
+                {/* The vendor directory has been commented out for this bridal-only build. */}
+                {/* <Button asChild variant="outline">
                   <Link to={routes.vendors}>Browse vendors</Link>
-                </Button>
+                </Button> */}
               </div>
             }
           />
@@ -100,7 +103,8 @@ export function WishlistPage() {
                 [
                   { key: 'all', label: 'Everything' },
                   { key: 'product', label: 'Pieces' },
-                  { key: 'vendor', label: 'Vendors' },
+                  // Vendor saving has been commented out for this bridal-only build.
+                  // { key: 'vendor', label: 'Vendors' },
                   { key: 'inspiration', label: 'Reading' },
                 ] as const
               ).map((option) => (
@@ -176,7 +180,8 @@ export function WishlistPage() {
               </section>
             ) : null}
 
-            {showVendors && savedVendors.length > 0 ? (
+            {/* Vendor saving has been commented out for this bridal-only build. */}
+            {/* {showVendors && savedVendors.length > 0 ? (
               <section aria-labelledby="saved-vendors">
                 <h2 id="saved-vendors" className="eyebrow mb-6">
                   Saved vendors ({savedVendors.length})
@@ -189,7 +194,7 @@ export function WishlistPage() {
                   ))}
                 </ul>
               </section>
-            ) : null}
+            ) : null} */}
 
             {showArticles && savedArticles.length > 0 ? (
               <section aria-labelledby="saved-reading">

@@ -1,5 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Product, ProductQuery, RetailerApplicationStatus, VendorQuery } from '@/types';
+import type { BridalBlueprint, Product, ProductQuery, RetailerApplicationStatus, VendorQuery } from '@/types';
 import {
   createRetailerProduct,
   deleteRetailerProduct,
@@ -33,6 +33,7 @@ import {
   submitApplication,
   withdrawApplication,
 } from '@/lib/api';
+import { bridalBlueprintService } from '@/lib/api/bridalBlueprint';
 import type { ArticleQuery } from '@/lib/api/content';
 import { useWeddingStore } from '@/stores/wedding';
 import { selectContext } from '@/stores/wedding';
@@ -73,6 +74,9 @@ export const queryKeys = {
     enquiries: ['retailer', 'enquiries'] as const,
     orders: ['retailer', 'orders'] as const,
     stats: (retailerId: string) => ['retailer', 'stats', retailerId] as const,
+  },
+  bridal: {
+    blueprint: ['bridal', 'blueprint'] as const,
   },
 };
 
@@ -285,6 +289,34 @@ export function useDeleteRetailerProduct(retailerId: string) {
   return useMutation({
     mutationFn: deleteRetailerProduct,
     onSuccess: () => client.invalidateQueries({ queryKey: queryKeys.retailer.products(retailerId) }),
+  });
+}
+
+/* ==========================================================================
+   Bridal blueprint
+   ========================================================================== */
+
+export function useBridalBlueprint() {
+  return useQuery({
+    queryKey: queryKeys.bridal.blueprint,
+    queryFn: () => bridalBlueprintService.get(),
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useSaveBridalBlueprint() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (blueprint: BridalBlueprint) => bridalBlueprintService.create(blueprint),
+    onSuccess: () => client.invalidateQueries({ queryKey: queryKeys.bridal.blueprint }),
+  });
+}
+
+export function useUpdateBridalBlueprint() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (blueprint: BridalBlueprint) => bridalBlueprintService.update(blueprint),
+    onSuccess: () => client.invalidateQueries({ queryKey: queryKeys.bridal.blueprint }),
   });
 }
 

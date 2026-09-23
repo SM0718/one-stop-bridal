@@ -8,7 +8,7 @@ import { RootLayout } from '@/components/layout/RootLayout';
 import { AccountLayout } from '@/components/layout/AccountLayout';
 import { RetailerLayout } from '@/components/layout/RetailerLayout';
 import { MarketplaceLayout } from '@/components/layout/MarketplaceLayout';
-import { PlanningLayout } from '@/components/planning/PlanningLayout';
+// import { PlanningLayout } from '@/components/planning/PlanningLayout';
 import { RouteError, RouteNotFound } from '@/routes/status';
 
 /**
@@ -32,11 +32,11 @@ const homeRoute = createRoute({
   component: lazyRouteComponent(() => import('@/routes/home'), 'HomePage'),
 });
 
-const onboardingRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/onboarding',
-  component: lazyRouteComponent(() => import('@/routes/onboarding'), 'OnboardingPage'),
-});
+// const onboardingRoute = createRoute({
+//   getParentRoute: () => rootRoute,
+//   path: '/onboarding',
+//   component: lazyRouteComponent(() => import('@/routes/onboarding'), 'OnboardingPage'),
+// });
 
 /* ==========================================================================
    Collections
@@ -72,78 +72,83 @@ const productRoute = createRoute({
    Vendors
    ========================================================================== */
 
-const vendorsRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/vendors',
-  component: MarketplaceLayout,
-});
+/* Vendor directory and vendor detail pages have been commented out for this
+   bridal-only build. The route files remain in the repository but are not
+   registered, so their URLs resolve to the 404 page. */
+// const vendorsRoute = createRoute({
+//   getParentRoute: () => rootRoute,
+//   path: '/vendors',
+//   component: MarketplaceLayout,
+// });
 
-const vendorsIndexRoute = createRoute({
-  getParentRoute: () => vendorsRoute,
-  path: '/',
-  validateSearch: passthroughSearch,
-  component: lazyRouteComponent(() => import('@/routes/vendors'), 'VendorsIndexPage'),
-});
+// const vendorsIndexRoute = createRoute({
+//   getParentRoute: () => vendorsRoute,
+//   path: '/',
+//   validateSearch: passthroughSearch,
+//   component: lazyRouteComponent(() => import('@/routes/vendors'), 'VendorsIndexPage'),
+// });
 
-const vendorCategoryRoute = createRoute({
-  getParentRoute: () => vendorsRoute,
-  path: '$category',
-  validateSearch: passthroughSearch,
-  component: lazyRouteComponent(() => import('@/routes/vendors'), 'VendorCategoryPage'),
-});
+// const vendorCategoryRoute = createRoute({
+//   getParentRoute: () => vendorsRoute,
+//   path: '$category',
+//   validateSearch: passthroughSearch,
+//   component: lazyRouteComponent(() => import('@/routes/vendors'), 'VendorCategoryPage'),
+// });
 
-const vendorRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/vendor/$slug',
-  component: lazyRouteComponent(() => import('@/routes/vendor'), 'VendorDetailPage'),
-});
+// const vendorRoute = createRoute({
+//   getParentRoute: () => rootRoute,
+//   path: '/vendor/$slug',
+//   component: lazyRouteComponent(() => import('@/routes/vendor'), 'VendorDetailPage'),
+// });
 
 /* ==========================================================================
    Planning
    ========================================================================== */
 
-const planningRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/planning',
-  component: PlanningLayout,
-});
+/* Planning dashboards and tools have been commented out for this bridal-only
+   build. The route files remain in the repository but are not registered. */
+// const planningRoute = createRoute({
+//   getParentRoute: () => rootRoute,
+//   path: '/planning',
+//   component: PlanningLayout,
+// });
 
-const planningIndexRoute = createRoute({
-  getParentRoute: () => planningRoute,
-  path: '/',
-  component: lazyRouteComponent(() => import('@/routes/planning/index'), 'PlanningDashboardPage'),
-});
+// const planningIndexRoute = createRoute({
+//   getParentRoute: () => planningRoute,
+//   path: '/',
+//   component: lazyRouteComponent(() => import('@/routes/planning/index'), 'PlanningDashboardPage'),
+// });
 
-const planningChecklistRoute = createRoute({
-  getParentRoute: () => planningRoute,
-  path: 'checklist',
-  validateSearch: passthroughSearch,
-  component: lazyRouteComponent(() => import('@/routes/planning/checklist'), 'PlanningChecklistPage'),
-});
+// const planningChecklistRoute = createRoute({
+//   getParentRoute: () => planningRoute,
+//   path: 'checklist',
+//   validateSearch: passthroughSearch,
+//   component: lazyRouteComponent(() => import('@/routes/planning/checklist'), 'PlanningChecklistPage'),
+// });
 
-const planningTimelineRoute = createRoute({
-  getParentRoute: () => planningRoute,
-  path: 'timeline',
-  component: lazyRouteComponent(() => import('@/routes/planning/timeline'), 'PlanningTimelinePage'),
-});
+// const planningTimelineRoute = createRoute({
+//   getParentRoute: () => planningRoute,
+//   path: 'timeline',
+//   component: lazyRouteComponent(() => import('@/routes/planning/timeline'), 'PlanningTimelinePage'),
+// });
 
-const planningBudgetRoute = createRoute({
-  getParentRoute: () => planningRoute,
-  path: 'budget',
-  component: lazyRouteComponent(() => import('@/routes/planning/budget'), 'PlanningBudgetPage'),
-});
+// const planningBudgetRoute = createRoute({
+//   getParentRoute: () => planningRoute,
+//   path: 'budget',
+//   component: lazyRouteComponent(() => import('@/routes/planning/budget'), 'PlanningBudgetPage'),
+// });
 
-const planningGuestsRoute = createRoute({
-  getParentRoute: () => planningRoute,
-  path: 'guests',
-  component: lazyRouteComponent(() => import('@/routes/planning/guests'), 'PlanningGuestsPage'),
-});
+// const planningGuestsRoute = createRoute({
+//   getParentRoute: () => planningRoute,
+//   path: 'guests',
+//   component: lazyRouteComponent(() => import('@/routes/planning/guests'), 'PlanningGuestsPage'),
+// });
 
-const planningEventsRoute = createRoute({
-  getParentRoute: () => planningRoute,
-  path: 'events',
-  component: lazyRouteComponent(() => import('@/routes/planning/events'), 'PlanningEventsPage'),
-});
+// const planningEventsRoute = createRoute({
+//   getParentRoute: () => planningRoute,
+//   path: 'events',
+//   component: lazyRouteComponent(() => import('@/routes/planning/events'), 'PlanningEventsPage'),
+// });
 
 /* ==========================================================================
    Editorial
@@ -350,19 +355,8 @@ const faqRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   homeRoute,
-  onboardingRoute,
   collectionsRoute.addChildren([collectionsIndexRoute, collectionGroupRoute]),
   productRoute,
-  vendorsRoute.addChildren([vendorsIndexRoute, vendorCategoryRoute]),
-  vendorRoute,
-  planningRoute.addChildren([
-    planningIndexRoute,
-    planningChecklistRoute,
-    planningTimelineRoute,
-    planningBudgetRoute,
-    planningGuestsRoute,
-    planningEventsRoute,
-  ]),
   inspirationRoute,
   inspirationDetailRoute,
   retailersRoute,

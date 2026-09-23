@@ -1,9 +1,12 @@
 import type { FaithId, SearchResult, SearchResponse, SearchResultKind } from '@/types';
 import { RETAILERS } from '@/data/retailers';
 import { COLLECTIONS, INSPIRATION } from '@/data/inspiration';
-import { getFaith } from '@/data/faiths';
+import { productCategoriesInGroup } from '@/data/categories';
 import { allProducts } from './products';
-import { VENDORS } from '@/data/vendors';
+// The vendor directory and ceremony events have been commented out for this
+// bridal-only build, so their data sources are no longer searched.
+// import { getFaith } from '@/data/faiths';
+// import { VENDORS } from '@/data/vendors';
 import { delay } from './client';
 
 const GROUP_LABELS: Record<SearchResultKind, string> = {
@@ -15,7 +18,7 @@ const GROUP_LABELS: Record<SearchResultKind, string> = {
   event: 'Ceremonies & events',
 };
 
-const GROUP_ORDER: SearchResultKind[] = ['product', 'vendor', 'collection', 'inspiration', 'guide', 'event'];
+const GROUP_ORDER: SearchResultKind[] = ['product', 'collection', 'inspiration', 'guide'];
 
 function scoreText(text: string, term: string, weight = 1): number {
   const lower = text.toLowerCase();
@@ -39,8 +42,12 @@ export async function search(query: string, faith: FaithId | null = null, limitP
 
   const results: SearchResult[] = [];
 
+  /* This is a bridal-only build, so non-bridal pieces are not searched. */
+  const bridalCategoryIds = new Set(productCategoriesInGroup('bridal').map((c) => c.id));
+
   /* Products */
   for (const p of allProducts()) {
+    if (!bridalCategoryIds.has(p.categoryId)) continue;
     let score = scoreText(p.name, term, 3) + scoreText(p.description, term, 1) + scoreText(p.code, term, 2);
     score += scoreText([p.fabric, p.colour, p.silhouette, ...p.styleTags].join(' '), term, 1);
     if (score > 0) {
@@ -59,27 +66,28 @@ export async function search(query: string, faith: FaithId | null = null, limitP
     }
   }
 
-  /* Vendors */
-  for (const v of VENDORS) {
-    let score = scoreText(v.name, term, 3) + scoreText(v.summary, term, 1);
-    score += scoreText([v.city, v.country, ...v.services.map((s) => s.name)].join(' '), term, 1);
-    if (score > 0) {
-      if (faith && v.faiths.includes(faith)) score += 4;
-      results.push({
-        id: v.id,
-        kind: 'vendor',
-        title: v.name,
-        subtitle: `${v.city} · ${v.categoryIds.length} service${v.categoryIds.length > 1 ? 's' : ''}`,
-        href: `/vendor/${v.slug}`,
-        mediaKey: v.coverMediaKey,
-        faiths: v.faiths,
-        score,
-      });
-    }
-  }
+  /* Vendors have been commented out for this bridal-only build. */
+  // for (const v of VENDORS) {
+  //   let score = scoreText(v.name, term, 3) + scoreText(v.summary, term, 1);
+  //   score += scoreText([v.city, v.country, ...v.services.map((s) => s.name)].join(' '), term, 1);
+  //   if (score > 0) {
+  //     if (faith && v.faiths.includes(faith)) score += 4;
+  //     results.push({
+  //       id: v.id,
+  //       kind: 'vendor',
+  //       title: v.name,
+  //       subtitle: `${v.city} · ${v.categoryIds.length} service${v.categoryIds.length > 1 ? 's' : ''}`,
+  //       href: `/vendor/${v.slug}`,
+  //       mediaKey: v.coverMediaKey,
+  //       faiths: v.faiths,
+  //       score,
+  //     });
+  //   }
+  // }
 
-  /* Collections */
+  /* Collections (bridal-only edits) */
   for (const c of COLLECTIONS) {
+    if (!c.categoryIds.some((id) => bridalCategoryIds.has(id))) continue;
     const score = scoreText(c.name, term, 3) + scoreText(c.description, term, 1);
     if (score > 0) {
       results.push({
@@ -112,25 +120,25 @@ export async function search(query: string, faith: FaithId | null = null, limitP
     }
   }
 
-  /* Ceremonies from the faith configurations themselves */
-  for (const faithConfig of [getFaith(faith)]) {
-    if (!faithConfig) continue;
-    for (const e of faithConfig.events) {
-      const score = scoreText(e.name, term, 3) + scoreText(e.summary, term, 1);
-      if (score > 0) {
-        results.push({
-          id: e.id,
-          kind: 'event',
-          title: e.name,
-          subtitle: e.summary,
-          href: '/planning/events',
-          mediaKey: null,
-          faiths: [faithConfig.id],
-          score: score + 2,
-        });
-      }
-    }
-  }
+  /* Ceremony events have been commented out for this bridal-only build. */
+  // for (const faithConfig of [getFaith(faith)]) {
+  //   if (!faithConfig) continue;
+  //   for (const e of faithConfig.events) {
+  //     const score = scoreText(e.name, term, 3) + scoreText(e.summary, term, 1);
+  //     if (score > 0) {
+  //       results.push({
+  //         id: e.id,
+  //         kind: 'event',
+  //         title: e.name,
+  //         subtitle: e.summary,
+  //         href: '/planning/events',
+  //         mediaKey: null,
+  //         faiths: [faithConfig.id],
+  //         score: score + 2,
+  //       });
+  //     }
+  //   }
+  // }
 
   const grouped = GROUP_ORDER.map((kind) => {
     const inGroup = results.filter((r) => r.kind === kind).sort((a, b) => b.score - a.score);
@@ -144,18 +152,15 @@ export async function search(query: string, faith: FaithId | null = null, limitP
   });
 }
 
-/** Suggestions shown before a query is typed. */
+/** Suggestions shown before a query is typed. Bridal-only for this build. */
 export async function getSearchSuggestions(): Promise<string[]> {
   return delay([
     'Bridal lehenga',
     'Modest bridalwear',
-    'Mehendi artist',
-    'Nikah looks',
-    'Church ceremony',
-    'Sherwani',
-    'Wedding jewellery',
-    'Anand Karaj',
-    'Chuppah',
-    'Wedding photographer',
+    'Bridal saree',
+    'Wedding gown',
+    'Made to measure',
+    'South Asian bridal',
+    'Bridal jewellery',
   ]);
 }
