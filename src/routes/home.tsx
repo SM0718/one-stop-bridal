@@ -1,11 +1,10 @@
 import { Link } from '@tanstack/react-router';
-import { ArrowRight, Calendar, Eye, Heart, MessageText1 } from 'iconsax-react';
+import { ArrowRight, Eye, Heart, MessageText1 } from 'iconsax-react';
 import { routes } from '@/config/routes';
 import { useArticles, useFeaturedProducts, useWeddingContext } from '@/hooks/queries';
 import { useDocumentMeta, schema } from '@/hooks/useDocumentMeta';
 import { useWeddingStore } from '@/stores/wedding';
 import { useUIStore } from '@/stores/ui';
-import { daysUntil, formatDate } from '@/lib/format';
 import { productCategoriesInGroup } from '@/data/categories';
 import { TRADITION_FAITHS } from '@/data/faiths';
 // Vendors and the vendor directory have been commented out for this bridal-only
@@ -18,6 +17,7 @@ import { TRADITION_FAITHS } from '@/data/faiths';
 import { PRODUCTS } from '@/data/products';
 import { RETAILERS } from '@/data/retailers';
 import { FAITH_IDS } from '@/types';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { MediaImage, MediaZoom } from '@/components/ui/media';
 import { Section, SectionHeader, EditorialSplit } from '@/components/editorial/Section';
@@ -28,12 +28,165 @@ import { FaithChooser, type FaithSelection } from '@/components/faith/FaithChoos
 import { FaithBadge } from '@/components/faith/FaithBadge';
 import { BlurFade } from '@/components/magicui/blur-fade';
 import { BentoCard, BentoGrid } from '@/components/magicui/bento-grid';
-import { BorderBeam } from '@/components/magicui/border-beam';
 import { Marquee } from '@/components/magicui/marquee';
 import { NumberTicker } from '@/components/magicui/number-ticker';
 import { ShimmerButton } from '@/components/magicui/shimmer-button';
-import { TextReveal } from '@/components/magicui/text-reveal';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+/* ==========================================================================
+   Hero — full-bleed rotating ceremony films. Each clip loops until the
+   interval advances to the next, crossfaded over ~1s. The video stack is
+   decorative; the section is fully keyboard/AT-accessible through the links
+   and the film caption is announced as the reel advances.
+   ========================================================================== */
+const HERO_VIDEOS = [
+  { src: '/hero-mehendi.mp4', label: 'Mehendi' },
+  { src: '/hero-haldi-face.mp4', label: 'Haldi' },
+  { src: '/hero-haldi-application.mp4', label: 'Haldi, close-up' },
+  { src: '/hero-bridal.mp4', label: 'The bride' },
+] as const;
+
+const HERO_VIDEO_INTERVAL_MS = 8000;
+
+function HeroSection() {
+  const [active, setActive] = useState(0);
+  const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (media.matches) {
+      videoRefs.current.forEach((video) => video?.pause());
+      return;
+    }
+
+    const interval = window.setInterval(
+      () => setActive((index) => (index + 1) % HERO_VIDEOS.length),
+      HERO_VIDEO_INTERVAL_MS,
+    );
+    return () => window.clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    videoRefs.current.forEach((video, index) => {
+      if (!video) return;
+      if (index === active) {
+        if (video.paused) void video.play();
+      } else {
+        video.pause();
+      }
+    });
+  }, [active]);
+
+  return (
+    <section aria-label="Hero">
+      <div className="relative isolate overflow-hidden bg-ink">
+        {/* Crossfaded ceremony films, looping behind the copy */}
+        <div className="absolute inset-0">
+          {HERO_VIDEOS.map((video, index) => (
+            <video
+              key={video.src}
+              ref={(element) => {
+                videoRefs.current[index] = element;
+              }}
+              src={video.src}
+              muted
+              loop
+              playsInline
+              preload="auto"
+              autoPlay={index === 0}
+              aria-hidden={index !== active}
+              tabIndex={-1}
+              className={cn(
+                'absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-editorial',
+                index === active ? 'opacity-100' : 'opacity-0',
+              )}
+            />
+          ))}
+        </div>
+
+        {/* Legibility scrim — keeps white copy readable over any frame */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/45"
+        />
+
+        <div className="relative z-10 container flex min-h-[76vh] flex-col justify-end gap-8 pb-14 pt-28 sm:min-h-[84vh] sm:pb-16 lg:min-h-[92vh]">
+          <div className="max-w-2xl">
+            <p className="mb-5 text-2xs uppercase tracking-eyebrow text-white/70">
+              Weddings across faiths and cultures
+            </p>
+            <h1 className="text-display-lg text-white lg:text-display-xl">
+              Everything for the wedding you imagine
+            </h1>
+            <p className="mt-6 max-w-lg text-[0.9375rem] leading-relaxed text-white/80">
+              Bridal collections, curated edits and the ateliers behind them — adapted to your ceremonies.
+              Built for weddings across traditions — and for the ones that combine two.
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <ShimmerButton
+                asChild
+                className="px-7 py-3.5 text-sm"
+                background="hsl(var(--rose))"
+              >
+                <Link to={routes.collectionsBridal}>Shop bridal</Link>
+              </ShimmerButton>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-white/40 bg-transparent text-white hover:border-white hover:bg-white/10 hover:text-white"
+              >
+                <Link to={routes.inspiration}>Explore inspiration</Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Active ceremony film caption + track indicator */}
+          <div className="flex flex-wrap items-center gap-3 text-xs text-white/70">
+            <span aria-hidden="true" className="h-px w-10 bg-white/40" />
+            <span>Ceremony film — {HERO_VIDEOS[active].label}</span>
+            <span aria-hidden="true" className="flex gap-1.5">
+              {HERO_VIDEOS.map((video, index) => (
+                <span
+                  key={video.src}
+                  className={cn(
+                    'h-1 w-1 rounded-full transition-colors duration-500',
+                    index === active ? 'bg-white' : 'bg-white/40',
+                  )}
+                />
+              ))}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Honest, countable facts about this build — labelled as such */}
+      <div className="container">
+        <dl className="grid gap-6 border-t border-border py-7 sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <dt className="eyebrow">Traditions configured</dt>
+            <dd className="mt-1.5 font-display text-2xl text-ink">
+              <NumberTicker value={FAITH_IDS.length} className="text-ink" delay={0.1} />
+            </dd>
+          </div>
+          <div>
+            <dt className="eyebrow">Pieces in the catalogue</dt>
+            <dd className="mt-1.5 font-display text-2xl text-ink">
+              <NumberTicker value={PRODUCTS.length} className="text-ink" delay={0.25} />
+            </dd>
+          </div>
+          <div>
+            <dt className="eyebrow">Retailers listing</dt>
+            <dd className="mt-1.5 font-display text-2xl text-ink">
+              <NumberTicker value={RETAILERS.length} className="text-ink" delay={0.4} />
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  );
+}
 
 export function HomePage() {
   useDocumentMeta({
@@ -46,12 +199,9 @@ export function HomePage() {
 
   const context = useWeddingContext();
   const faith = useWeddingStore((s) => s.profile.faith);
-  const weddingDate = useWeddingStore((s) => s.profile.weddingDate);
 
   const { data: products } = useFeaturedProducts(8);
   const { data: articles } = useArticles({ limit: 3 });
-
-  const remaining = daysUntil(weddingDate);
 
   /* Recommendations fill a single row of equal cards. The column count follows
      the number available, so the row is never left with a dangling gap.
@@ -69,97 +219,14 @@ export function HomePage() {
   return (
     <>
       {/* ================================================================
-          1. Hero — asymmetric, image-led, no oversized headline
+          1. Hero — full-bleed rotating ceremony films with overlay
           ================================================================ */}
-      <section className="border-b border-border">
-        <div className="container">
-          <div className="grid items-end gap-10 py-12 lg:grid-cols-12 lg:gap-14 lg:py-16">
-            <div className="lg:col-span-5 lg:pb-8">
-              <p className="eyebrow mb-5">Weddings across faiths and cultures</p>
-              <h1 className="text-display-md text-ink lg:text-display-lg">
-                Everything for the wedding you imagine
-              </h1>
-              <p className="mt-6 max-w-lg text-[0.9375rem] leading-relaxed text-ink-soft">
-                Bridal collections, curated edits and the ateliers behind them — adapted to your ceremonies.
-                Built for weddings across traditions — and for the ones that combine two.
-              </p>
-
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <ShimmerButton
-                  asChild
-                  className="px-7 py-3.5 text-sm"
-                  background="hsl(var(--ink))"
-                >
-                  <Link to={routes.collectionsBridal}>Shop bridal</Link>
-                </ShimmerButton>
-                <Button asChild variant="outline" size="lg">
-                  <Link to={routes.inspiration}>Explore inspiration</Link>
-                </Button>
-              </div>
-
-              {remaining !== null ? (
-                <p className="mt-6 flex items-center gap-2 text-sm text-ink-soft">
-                  <Calendar size={16} variant="Linear" aria-hidden="true" />
-                  {remaining > 0
-                    ? `${remaining} ${remaining === 1 ? 'day' : 'days'} until ${formatDate(weddingDate, 'long')}`
-                    : 'Your wedding date has passed'}
-                </p>
-              ) : null}
-            </div>
-
-            <div className="relative overflow-hidden rounded-lg lg:col-span-7">
-              <MediaImage
-                mediaKey="hero-portrait"
-                aspect="wide"
-                priority
-                sizes="(min-width: 1024px) 58vw, 100vw"
-                width={1440}
-                height={810}
-                className="lg:aspect-[4/3]"
-              />
-              <BorderBeam
-                size={160}
-                duration={9}
-                delay={0.5}
-                colorFrom="hsl(var(--gold))"
-                colorTo="hsl(var(--champagne-soft))"
-              />
-            </div>
-          </div>
-
-          {/* Honest, countable facts about this build — labelled as such */}
-          <dl className="grid gap-6 border-t border-border py-7 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <dt className="eyebrow">Traditions configured</dt>
-              <dd className="mt-1.5 font-display text-2xl text-ink">
-                <NumberTicker value={FAITH_IDS.length} className="text-ink" delay={0.1} />
-              </dd>
-            </div>
-            <div>
-              <dt className="eyebrow">Pieces in the catalogue</dt>
-              <dd className="mt-1.5 font-display text-2xl text-ink">
-                <NumberTicker value={PRODUCTS.length} className="text-ink" delay={0.25} />
-              </dd>
-            </div>
-            {/* The vendor directory has been commented out for this bridal-only build. */}
-            {/* <div>
-              <dt className="eyebrow">Wedding professionals</dt>
-              <dd className="mt-1.5 font-display text-2xl text-ink">{VENDORS.length}</dd>
-            </div> */}
-            <div>
-              <dt className="eyebrow">Retailers listing</dt>
-              <dd className="mt-1.5 font-display text-2xl text-ink">
-                <NumberTicker value={RETAILERS.length} className="text-ink" delay={0.4} />
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* ================================================================
           1b. Traditions band — decorative marquee
           ================================================================ */}
-      <section className="border-b border-border bg-background" aria-label="Traditions covered">
+      <section className="border-b border-border bg-marigold-soft/60" aria-label="Traditions covered">
         <div className="container py-6">
           <p className="eyebrow mb-4 text-center">Traditions we plan for</p>
           <Marquee pauseOnHover className="[--duration:50s]">
@@ -378,19 +445,6 @@ export function HomePage() {
       ) : null}
 
       {/* ================================================================
-          8b. Manifesto — scroll-revealing serif statement
-          ================================================================ */}
-      <section className="border-b border-border bg-ivory/40" aria-label="What we believe">
-        <div className="container">
-          <p className="eyebrow mb-10 pt-20 text-center lg:pt-24">In one line</p>
-          <TextReveal
-            text="A wedding is held by hand. Every piece, practice and page on this site is there because someone chose it — by hand, printed, and kept."
-            className="pb-20 lg:pb-24"
-          />
-        </div>
-      </section>
-
-      {/* ================================================================
           9. Retailer ecosystem
           ================================================================ */}
       <Section>
@@ -449,7 +503,7 @@ export function HomePage() {
                 <ShimmerButton
                   asChild
                   className="px-7 py-3.5 text-sm"
-                  background="hsl(var(--ink))"
+                  background="hsl(var(--rose))"
                 >
                   <Link to={routes.collectionsBridal}>Shop bridal</Link>
                 </ShimmerButton>

@@ -36,7 +36,7 @@ export function MobileTabBar() {
                 aria-current={active ? 'page' : undefined}
                 className={cn(
                   'relative flex min-h-14 flex-col items-center justify-center gap-1 px-1 py-2 text-[0.625rem] uppercase tracking-wide transition-colors',
-                  active ? 'text-ink' : 'text-ink-muted',
+                  active ? 'text-rose' : 'text-ink-muted',
                 )}
               >
                 <Icon size={20} variant={active ? 'Bold' : 'Linear'} aria-hidden="true" />
@@ -45,7 +45,7 @@ export function MobileTabBar() {
                   <span className="absolute right-[22%] top-1.5 h-1.5 w-1.5 rounded-full bg-gold" aria-hidden="true" />
                 ) : null}
                 {active ? (
-                  <span aria-hidden="true" className="absolute inset-x-5 top-0 h-px bg-ink" />
+                  <span aria-hidden="true" className="absolute inset-x-5 top-0 h-px bg-rose" />
                 ) : null}
               </Link>
             </li>

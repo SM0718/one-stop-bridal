@@ -30,7 +30,7 @@ export function Section({
       id={id}
       className={cn(
         'py-14 lg:py-20',
-        tone === 'deep' && 'bg-ivory-deep/60',
+        tone === 'deep' && 'bg-champagne-soft/60',
         tone === 'muted' && 'bg-muted/40',
         className,
       )}

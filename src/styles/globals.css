@@ -3,58 +3,74 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   Design tokens — a warm bridal palette.
-   Photography is the hero, so surfaces stay quiet and low-contrast.
+   Design tokens — a premium pure-white palette. Surfaces are clean white
+   and near-black; photography carries the colour. Brand accents stay
+   restrained: bridal rose, a refined brass/champagne gold and a quiet
+   mehndi green — no yellow cast anywhere. Solid colours only — no gradients.
    Change the theme centrally here.
    ========================================================================== */
 @layer base {
   :root {
-    /* Surfaces */
-    --background: 38 36% 96%; /* warm ivory #F8F5F0 */
-    --foreground: 30 10% 12%; /* warm near-black #211E1B */
+    /* Surfaces — clean white, neutral greys */
+    --background: 0 0% 100%; /* pure white #FFFFFF */
+    --foreground: 0 0% 10%; /* neutral near-black #1A1A1A */
 
-    --ivory: 38 36% 96%;
-    --ivory-deep: 36 38% 92%;
-    --pearl: 36 50% 98%;
-    --cream: 36 38% 92%;
-    --champagne: 38 42% 82%;
-    --champagne-soft: 38 43% 90%;
-    --blush: 12 36% 86%;
-    --blush-deep: 12 34% 74%;
-    --taupe: 33 8% 51%;
-    --taupe-light: 34 9% 69%;
+    --ivory: 0 0% 99%;
+    --ivory-deep: 0 0% 97%;
+    --pearl: 0 0% 100%;
+    --cream: 0 0% 96%;
+    --champagne: 0 0% 84%;
+    --champagne-soft: 0 0% 94%;
+    --blush: 0 0% 96%;
+    --blush-deep: 0 0% 80%;
+    --taupe: 0 0% 45%;
+    --taupe-light: 0 0% 64%;
 
-    --card: 36 50% 98%;
-    --card-foreground: 30 10% 12%;
-    --popover: 36 50% 98%;
-    --popover-foreground: 30 10% 12%;
+    /* Bridal rose — kumkum/lehenga red, damped for text-on-light use */
+    --rose: 355 58% 42%;
+    --rose-deep: 355 62% 32%;
+    --rose-soft: 354 50% 95%;
 
-    --primary: 30 10% 12%;
-    --primary-foreground: 38 36% 96%;
+    /* Refined brass — wedding register without the yellow cast */
+    --marigold: 40 55% 42%;
+    --marigold-deep: 40 55% 30%;
+    --marigold-soft: 40 35% 95%;
 
-    --secondary: 36 29% 91%;
-    --secondary-foreground: 30 10% 12%;
+    /* Mehndi green — henna night green */
+    --mehndi: 152 42% 28%;
+    --mehndi-soft: 150 30% 95%;
 
-    --muted: 36 29% 91%;
-    --muted-foreground: 31 8% 40%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
 
-    /* Restrained antique gold */
-    --accent: 40 28% 48%;
-    --accent-foreground: 36 50% 98%;
-    --gold: 40 28% 48%;
-    --gold-soft: 40 36% 67%;
-    --gold-deep: 40 38% 35%;
+    --primary: 0 0% 10%;
+    --primary-foreground: 0 0% 100%;
 
-    --ink: 30 10% 12%;
-    --ink-soft: 30 9% 27%;
-    --ink-muted: 31 8% 40%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
 
-    --destructive: 9 45% 43%;
-    --destructive-foreground: 36 50% 98%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 42%;
 
-    --border: 35 23% 86%;
-    --input: 35 23% 86%;
-    --ring: 40 28% 48%;
+    /* Champagne gold — premium, restrained */
+    --accent: 40 55% 42%;
+    --accent-foreground: 0 0% 100%;
+    --gold: 40 55% 42%;
+    --gold-soft: 40 30% 68%;
+    --gold-deep: 40 50% 30%;
+
+    --ink: 0 0% 10%;
+    --ink-soft: 0 0% 22%;
+    --ink-muted: 0 0% 42%;
+
+    --destructive: 9 55% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 40 55% 42%;
 
     /* Restrained radii — editorial, not app-like */
     --radius: 3px;
@@ -81,8 +97,8 @@
   }
 
   ::selection {
-    background: hsl(var(--champagne));
-    color: hsl(var(--ink));
+    background: hsl(var(--rose));
+    color: hsl(var(--ivory));
   }
 
   h1,
@@ -126,7 +142,7 @@
 @layer components {
   /* Small uppercase label used above headings and on product metadata */
   .eyebrow {
-    @apply font-sans text-2xs uppercase tracking-eyebrow text-ink-muted;
+    @apply font-sans text-2xs uppercase tracking-eyebrow text-gold-deep;
   }
 
   .display {

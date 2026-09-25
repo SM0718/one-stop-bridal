@@ -12,7 +12,7 @@ const SOCIAL = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-section border-t border-border bg-ivory-deep/60">
+    <footer className="mt-section border-t border-border bg-blush/35">
       <div className="container py-14 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,22rem)_1fr]">
           <div>
@@ -49,7 +49,7 @@ export function SiteFooter() {
                     target="_blank"
                     rel="noreferrer noopener"
                     aria-label={label}
-                    className="flex h-10 w-10 items-center justify-center border border-border text-ink-muted transition-colors hover:border-ink hover:text-ink"
+                    className="flex h-10 w-10 items-center justify-center border border-border text-ink-muted transition-colors hover:border-marigold hover:text-marigold-deep"
                   >
                     <Icon size={18} variant="Linear" />
                   </a>

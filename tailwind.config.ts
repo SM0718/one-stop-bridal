@@ -69,6 +69,20 @@ export default {
           DEFAULT: 'hsl(var(--blush))',
           deep: 'hsl(var(--blush-deep))',
         },
+        rose: {
+          DEFAULT: 'hsl(var(--rose))',
+          deep: 'hsl(var(--rose-deep))',
+          soft: 'hsl(var(--rose-soft))',
+        },
+        marigold: {
+          DEFAULT: 'hsl(var(--marigold))',
+          deep: 'hsl(var(--marigold-deep))',
+          soft: 'hsl(var(--marigold-soft))',
+        },
+        mehndi: {
+          DEFAULT: 'hsl(var(--mehndi))',
+          soft: 'hsl(var(--mehndi-soft))',
+        },
         taupe: {
           DEFAULT: 'hsl(var(--taupe))',
           light: 'hsl(var(--taupe-light))',

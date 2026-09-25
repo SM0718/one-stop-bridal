@@ -5,16 +5,16 @@ import { cn } from '@/lib/utils';
 
 /**
  * Buttons are rectangular with a hairline border rather than pill-shaped, to
- * keep the editorial register. Only one variant carries the gold accent, so
- * emphasis stays rare.
+ * keep the editorial register. The primary action carries the bridal rose,
+ * and the gold accent is reserved for secondary emphasis.
  */
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap font-sans text-sm font-medium transition-colors duration-200 ease-editorial focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-45 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        default: 'bg-ink text-ivory hover:bg-ink-soft',
-        outline: 'border border-border bg-transparent text-ink hover:border-ink hover:bg-muted/60',
+        default: 'bg-rose text-ivory hover:bg-rose-deep',
+        outline: 'border border-border bg-transparent text-ink hover:border-rose/60 hover:bg-rose-soft/50 hover:text-rose-deep',
         subtle: 'bg-muted text-ink hover:bg-champagne-soft',
         accent: 'bg-gold text-ivory hover:bg-gold-deep',
         ghost: 'text-ink hover:bg-muted',

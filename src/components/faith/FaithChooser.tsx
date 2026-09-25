@@ -84,19 +84,30 @@ export function FaithChooser({
                 type="button"
                 onClick={() => select(faith.id)}
                 aria-pressed={active}
+                style={
+                  active
+                    ? { backgroundColor: `${faith.accent.hex}1A`, boxShadow: `inset 2px 0 0 0 ${faith.accent.hex}` }
+                    : undefined
+                }
                 className={cn(
                   'group relative flex h-full w-full flex-col items-start gap-2 p-5 text-left transition-colors duration-200',
-                  active ? 'bg-champagne-soft' : 'bg-background hover:bg-muted/70',
+                  active ? 'bg-background' : 'bg-background hover:bg-muted/70',
                 )}
               >
                 <span className="flex w-full items-start justify-between gap-3">
                   <span className="font-display text-xl leading-tight text-ink sm:text-2xl">{faith.name}</span>
                   {active ? (
-                    <TickCircle size={18} variant="Linear" className="mt-1 shrink-0 text-gold-deep" aria-hidden="true" />
+                    <TickCircle
+                      size={18}
+                      variant="Linear"
+                      className="mt-1 shrink-0"
+                      style={{ color: faith.accent.hex }}
+                      aria-hidden="true"
+                    />
                   ) : (
                     <span
                       aria-hidden="true"
-                      className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                      className="mt-1.5 h-3 w-3 shrink-0 rounded-full"
                       style={{ backgroundColor: faith.accent.hex }}
                     />
                   )}

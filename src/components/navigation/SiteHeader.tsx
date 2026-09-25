@@ -87,7 +87,7 @@ export function SiteHeader() {
         {/* Utility strip */}
         <div
           className={cn(
-            'hidden overflow-hidden border-b border-border/70 transition-all duration-300 ease-editorial lg:block',
+            'hidden overflow-hidden border-b border-border/70 bg-marigold-soft/60 transition-all duration-300 ease-editorial lg:block',
             scrolled ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100',
           )}
         >
@@ -155,7 +155,7 @@ export function SiteHeader() {
                         <span
                           aria-hidden="true"
                           className={cn(
-                            'absolute inset-x-0 -bottom-px h-px origin-left bg-ink transition-transform duration-300 ease-editorial',
+                            'absolute inset-x-0 -bottom-px h-px origin-left bg-gold transition-transform duration-300 ease-editorial',
                             isOpen ? 'scale-x-100' : 'scale-x-0',
                           )}
                         />
@@ -201,7 +201,7 @@ export function SiteHeader() {
             >
               <Heart size={20} variant="Linear" />
               {wishlistCount > 0 ? (
-                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center bg-ink px-1 text-[0.625rem] font-medium text-ivory">
+                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center bg-rose px-1 text-[0.625rem] font-medium text-ivory">
                   {wishlistCount > 9 ? '9+' : wishlistCount}
                 </span>
               ) : null}
@@ -214,7 +214,7 @@ export function SiteHeader() {
             >
               <Bag2 size={20} variant="Linear" />
               {cartCount > 0 ? (
-                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center bg-ink px-1 text-[0.625rem] font-medium text-ivory">
+                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center bg-rose px-1 text-[0.625rem] font-medium text-ivory">
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               ) : null}
