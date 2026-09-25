@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from '@tanstack/react-router';
 import { ArrowRight } from 'iconsax-react';
 import { cn } from '@/lib/utils';
+import { ShinyText, SplitText } from '@/components/reactbits';
 
 /**
  * Vertical rhythm and headings for content sections.
@@ -64,8 +65,29 @@ export function SectionHeader({
       )}
     >
       <div className={cn('max-w-2xl', align === 'center' && 'mx-auto')}>
-        {eyebrow ? <p className="eyebrow mb-3">{eyebrow}</p> : null}
-        <h2 className="text-display-sm text-ink">{title}</h2>
+        {eyebrow ? (
+          <p className="eyebrow mb-3">
+            <ShinyText
+              text={eyebrow}
+              speed={2}
+              spread={260}
+              color="hsl(var(--gold-deep))"
+              shineColor="hsl(var(--champagne))"
+              direction="left"
+            />
+          </p>
+        ) : null}
+        <SplitText
+          text={title}
+          tag="h2"
+          splitType="words"
+          textAlign={align === 'center' ? 'center' : 'left'}
+          threshold={0.2}
+          delay={40}
+          duration={1.1}
+          from={{ opacity: 0, y: 34 }}
+          className="text-display-sm text-ink"
+        />
         {description ? (
           <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-soft">{description}</p>
         ) : null}
@@ -124,8 +146,29 @@ export function EditorialSplit({
     <div className={cn('grid items-center gap-8 lg:grid-cols-2 lg:gap-16', className)}>
       <div className={cn(reverse && 'lg:order-2')}>{media}</div>
       <div className={cn('max-w-xl', reverse && 'lg:order-1')}>
-        {eyebrow ? <p className="eyebrow mb-3">{eyebrow}</p> : null}
-        <h2 className="text-display-sm text-ink">{title}</h2>
+        {eyebrow ? (
+          <p className="eyebrow mb-3">
+            <ShinyText
+              text={eyebrow}
+              speed={2}
+              spread={260}
+              color="hsl(var(--gold-deep))"
+              shineColor="hsl(var(--champagne))"
+              direction="left"
+            />
+          </p>
+        ) : null}
+        <SplitText
+          text={title}
+          tag="h2"
+          splitType="words"
+          textAlign="left"
+          threshold={0.2}
+          delay={40}
+          duration={1.1}
+          from={{ opacity: 0, y: 34 }}
+          className="text-display-sm text-ink"
+        />
         <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-soft">{body}</p>
         {action ? (
           <Link

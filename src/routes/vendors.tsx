@@ -16,6 +16,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { VendorGrid } from '@/components/vendor/VendorCard';
 import { VendorFilterPanel } from '@/components/filters/VendorFilterPanel';
 import { Section, SectionHeader } from '@/components/editorial/Section';
+import { SplitText } from '@/components/reactbits';
 import { MediaImage } from '@/components/ui/media';
 import { RouteNotFound } from './status';
 
@@ -251,7 +252,17 @@ export function VendorsIndexPage() {
       </Section>
 
       <div className="container pb-section">
-        <h2 className="text-display-sm text-ink">All vendors</h2>
+        <SplitText
+          text="All vendors"
+          tag="h2"
+          splitType="words"
+          className="text-display-sm text-ink"
+          textAlign="left"
+          threshold={0.15}
+          delay={30}
+          duration={1.1}
+          from={{ opacity: 0, y: 30 }}
+        />
         <p className="mt-3 max-w-editorial text-[0.9375rem] leading-relaxed text-ink-soft">
           {context.label} weddings lead the list. Ratings are not shown on this platform because we do not have genuine
           review data — verification tells you we have checked a business exists, not that we recommend it.

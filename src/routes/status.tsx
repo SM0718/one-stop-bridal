@@ -1,15 +1,24 @@
 import { Link, type ErrorComponentProps } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { routes } from '@/config/routes';
+import { SplitText } from '@/components/reactbits';
 
 /** 404. Offers the routes people most often want rather than a dead end. */
 export function RouteNotFound() {
   return (
     <div className="container flex min-h-[60vh] flex-col justify-center py-20">
       <p className="eyebrow mb-4">Page not found</p>
-      <h1 className="max-w-2xl text-display-sm text-ink sm:text-display-md">
-        That page has moved, or it never existed
-      </h1>
+      <SplitText
+        text="That page has moved, or it never existed"
+        tag="h1"
+        splitType="words"
+        className="max-w-2xl text-display-sm text-ink sm:text-display-md"
+        textAlign="left"
+        threshold={0.15}
+        delay={30}
+        duration={1.1}
+        from={{ opacity: 0, y: 30 }}
+      />
       <p className="mt-5 max-w-editorial text-[0.9375rem] leading-relaxed text-ink-soft">
         Check the address, or start from one of these. If you followed a link from somewhere on the site, tell us and we
         will fix it.
@@ -36,9 +45,17 @@ export function RouteError({ error, reset }: ErrorComponentProps) {
   return (
     <div className="container flex min-h-[60vh] flex-col justify-center py-20" role="alert">
       <p className="eyebrow mb-4">{isNotFound ? 'Not found' : 'Something went wrong'}</p>
-      <h1 className="max-w-2xl text-display-sm text-ink sm:text-display-md">
-        {isNotFound ? 'We could not find that' : 'This page did not load'}
-      </h1>
+      <SplitText
+        text={isNotFound ? 'We could not find that' : 'This page did not load'}
+        tag="h1"
+        splitType="words"
+        className="max-w-2xl text-display-sm text-ink sm:text-display-md"
+        textAlign="left"
+        threshold={0.15}
+        delay={30}
+        duration={1.1}
+        from={{ opacity: 0, y: 30 }}
+      />
       <p className="mt-5 max-w-editorial text-[0.9375rem] leading-relaxed text-ink-soft">
         {isNotFound
           ? 'The piece or business you are looking for may have been removed, or the link may be incorrect.'

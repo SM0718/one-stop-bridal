@@ -6,6 +6,7 @@ import { PageHeader } from '@/components/ui/breadcrumb';
 import { MediaImage } from '@/components/ui/media';
 import { Button } from '@/components/ui/button';
 import { Section, SectionHeader, EditorialSplit } from '@/components/editorial/Section';
+import { SplitText } from '@/components/reactbits';
 import { cn } from '@/lib/utils';
 
 const PRINCIPLES = [
@@ -65,7 +66,17 @@ export function AboutPage() {
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-5">
             <p className="eyebrow mb-3">Why we built it</p>
-            <h2 className="text-display-sm text-ink">The wedding industry is not one culture</h2>
+            <SplitText
+              text="The wedding industry is not one culture"
+              tag="h2"
+              splitType="words"
+              className="text-display-sm text-ink"
+              textAlign="left"
+              threshold={0.15}
+              delay={30}
+              duration={1.1}
+              from={{ opacity: 0, y: 30 }}
+            />
           </div>
           <div className="prose-editorial lg:col-span-7">
             <p>

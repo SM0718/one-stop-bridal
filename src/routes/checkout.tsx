@@ -20,6 +20,7 @@ import { Separator } from '@/components/ui/separator';
 import { EmptyState } from '@/components/ui/empty-state';
 import { MediaImage } from '@/components/ui/media';
 import { AnimatedList } from '@/components/magicui/animated-list';
+import { SplitText } from '@/components/reactbits';
 
 type CheckoutValues = z.input<typeof checkoutSchema>;
 
@@ -80,7 +81,17 @@ export function CheckoutPage() {
       <div className="container py-16 lg:py-24">
         <div className="max-w-2xl">
           <TickCircle size={40} variant="Linear" className="text-gold-deep" aria-hidden="true" />
-          <h1 className="mt-6 text-display-sm text-ink">Order recorded</h1>
+          <SplitText
+            text="Order recorded"
+            tag="h1"
+            splitType="words"
+            className="mt-6 text-display-sm text-ink"
+            textAlign="left"
+            threshold={0.15}
+            delay={30}
+            duration={1.1}
+            from={{ opacity: 0, y: 30 }}
+          />
           <p className="mt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
             In a live build you would now receive an email confirmation, and the retailer would confirm production
             timelines and take payment directly. Nothing has been charged and no order has been sent, because this is a

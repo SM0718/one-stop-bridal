@@ -11,6 +11,7 @@ import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { getFaith } from '@/data/faiths';
 import { routes } from '@/config/routes';
 import { cn } from '@/lib/utils';
+import { SplitText } from '@/components/reactbits';
 
 const STEPS = ['Your wedding', 'The practical details', 'Done'] as const;
 
@@ -114,7 +115,17 @@ export function OnboardingPage() {
         {step === 0 ? (
           <div className="max-w-4xl">
             <p className="eyebrow mb-3">Your wedding, your way</p>
-            <h1 className="text-display-sm text-ink sm:text-display-md">What kind of wedding are you planning?</h1>
+            <SplitText
+              text="What kind of wedding are you planning?"
+              tag="h1"
+              splitType="words"
+              className="text-display-sm text-ink sm:text-display-md"
+              textAlign="left"
+              threshold={0.15}
+              delay={30}
+              duration={1.1}
+              from={{ opacity: 0, y: 30 }}
+            />
             <p className="mt-5 max-w-editorial text-[0.9375rem] leading-relaxed text-ink-soft">
               Pick the tradition closest to your wedding. This shapes the ceremonies we suggest, the collections and
               vendors you see first, and the tasks in your planner. You can change it at any time, and nothing is
@@ -135,9 +146,17 @@ export function OnboardingPage() {
         {step === 1 ? (
           <div className="max-w-2xl">
             <p className="eyebrow mb-3">Optional</p>
-            <h1 className="text-display-sm text-ink sm:text-display-md">
-              {chosen ? `A ${chosen.shortName.toLowerCase()} wedding` : 'Your wedding'} — a few practical details
-            </h1>
+            <SplitText
+              text={`${chosen ? `A ${chosen.shortName.toLowerCase()} wedding` : 'Your wedding'} — a few practical details`}
+              tag="h1"
+              splitType="words"
+              className="text-display-sm text-ink sm:text-display-md"
+              textAlign="left"
+              threshold={0.15}
+              delay={30}
+              duration={1.1}
+              from={{ opacity: 0, y: 30 }}
+            />
             <p className="mt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
               A date lets us build your timeline and fill in deadlines automatically. Skip anything you have not decided
               yet — you can add it later from your wedding profile.
@@ -206,9 +225,17 @@ export function OnboardingPage() {
         {step === 2 ? (
           <div className="max-w-2xl">
             <p className="eyebrow mb-3">Ready</p>
-            <h1 className="text-display-sm text-ink sm:text-display-md">
-              Your wedding experience has been personalised
-            </h1>
+            <SplitText
+              text="Your wedding experience has been personalised"
+              tag="h1"
+              splitType="words"
+              className="text-display-sm text-ink sm:text-display-md"
+              textAlign="left"
+              threshold={0.15}
+              delay={30}
+              duration={1.1}
+              from={{ opacity: 0, y: 30 }}
+            />
             <p className="mt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
               {chosen
                 ? `Collections, vendors and your checklist now lead with ${chosen.name} ceremonies and categories. Everything stays editable.`

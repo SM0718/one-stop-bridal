@@ -29,8 +29,17 @@ import { FaithBadge } from '@/components/faith/FaithBadge';
 import { BlurFade } from '@/components/magicui/blur-fade';
 import { BentoCard, BentoGrid } from '@/components/magicui/bento-grid';
 import { Marquee } from '@/components/magicui/marquee';
-import { NumberTicker } from '@/components/magicui/number-ticker';
 import { ShimmerButton } from '@/components/magicui/shimmer-button';
+import {
+  ClickSpark,
+  CountUp,
+  DotGrid,
+  FadeContent,
+  Magnet,
+  RotatingText,
+  ShinyText,
+  SplitText,
+} from '@/components/reactbits';
 import { useEffect, useRef, useState } from 'react';
 
 /* ==========================================================================
@@ -42,11 +51,23 @@ import { useEffect, useRef, useState } from 'react';
 const HERO_VIDEOS = [
   { src: '/hero-mehendi.mp4', label: 'Mehendi' },
   { src: '/hero-haldi-face.mp4', label: 'Haldi' },
-  { src: '/hero-haldi-application.mp4', label: 'Haldi, close-up' },
-  { src: '/hero-bridal.mp4', label: 'The bride' },
+  { src: '/8751570-uhd_4096_2160_24fps.mp4', label: 'Haldi, close-up' },
+  { src: '/12091492_3840_2160_50fps%20%281%29.mp4', label: 'The bride' },
 ] as const;
 
 const HERO_VIDEO_INTERVAL_MS = 8000;
+
+const HERO_ROTATING_FAITHS = [
+  'Hindu',
+  'Muslim',
+  'Christian',
+  'Sikh',
+  'Parsi',
+  'Jain',
+  'Buddhist',
+  'Jewish',
+  'Interfaith',
+];
 
 function HeroSection() {
   const [active, setActive] = useState(0);
@@ -113,32 +134,68 @@ function HeroSection() {
         <div className="relative z-10 container flex min-h-[76vh] flex-col justify-end gap-8 pb-14 pt-28 sm:min-h-[84vh] sm:pb-16 lg:min-h-[92vh]">
           <div className="max-w-2xl">
             <p className="mb-5 text-2xs uppercase tracking-eyebrow text-white/70">
-              Weddings across faiths and cultures
+              <ShinyText
+                text="Weddings across faiths and cultures"
+                speed={2.5}
+                spread={240}
+                color="rgba(255,255,255,0.72)"
+                shineColor="rgba(255,255,255,1)"
+                direction="left"
+              />
             </p>
-            <h1 className="text-display-lg text-white lg:text-display-xl">
-              Everything for the wedding you imagine
-            </h1>
-            <p className="mt-6 max-w-lg text-[0.9375rem] leading-relaxed text-white/80">
-              Bridal collections, curated edits and the ateliers behind them — adapted to your ceremonies.
-              Built for weddings across traditions — and for the ones that combine two.
-            </p>
+            <SplitText
+              text="Everything for the wedding you imagine"
+              tag="h1"
+              splitType="words, chars"
+              className="text-display-lg text-white lg:text-display-xl"
+              textAlign="left"
+              threshold={0.2}
+              delay={25}
+              duration={1.2}
+              from={{ opacity: 0, y: 48 }}
+            />
+            <FadeContent blur duration={900} delay={0.4} className="mt-6 max-w-lg">
+              <p className="text-[0.9375rem] leading-relaxed text-white/80">
+                Bridal collections, curated edits and the ateliers behind them — adapted to your ceremonies.
+                Built for weddings across traditions — and for the ones that combine two.
+              </p>
+            </FadeContent>
+
+            <div className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.9375rem] leading-relaxed text-white/80">
+              <span>For your</span>
+              <RotatingText
+                texts={HERO_ROTATING_FAITHS}
+                mainClassName="text-white"
+                elementLevelClassName="font-display text-lg leading-none text-gold-soft"
+                rotationInterval={2400}
+                staggerDuration={0.04}
+                transition={{ type: 'spring', damping: 22, stiffness: 280 }}
+              />
+              <span>wedding</span>
+            </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ShimmerButton
-                asChild
-                className="px-7 py-3.5 text-sm"
-                background="hsl(var(--rose))"
-              >
-                <Link to={routes.collectionsBridal}>Shop bridal</Link>
-              </ShimmerButton>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-white/40 bg-transparent text-white hover:border-white hover:bg-white/10 hover:text-white"
-              >
-                <Link to={routes.inspiration}>Explore inspiration</Link>
-              </Button>
+              <Magnet magnetStrength={6} padding={90} wrapperClassName="shrink-0">
+                <ClickSpark sparkColor="#EBD3AE" sparkSize={3} sparkCount={10} sparkRadius={22} duration={600}>
+                  <ShimmerButton
+                    asChild
+                    className="px-7 py-3.5 text-sm"
+                    background="hsl(var(--rose))"
+                  >
+                    <Link to={routes.collectionsBridal}>Shop bridal</Link>
+                  </ShimmerButton>
+                </ClickSpark>
+              </Magnet>
+              <Magnet magnetStrength={6} padding={90} wrapperClassName="shrink-0">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="border-white/40 bg-transparent text-white hover:border-white hover:bg-white/10 hover:text-white"
+                >
+                  <Link to={routes.inspiration}>Explore inspiration</Link>
+                </Button>
+              </Magnet>
             </div>
           </div>
 
@@ -167,19 +224,19 @@ function HeroSection() {
           <div>
             <dt className="eyebrow">Traditions configured</dt>
             <dd className="mt-1.5 font-display text-2xl text-ink">
-              <NumberTicker value={FAITH_IDS.length} className="text-ink" delay={0.1} />
+              <CountUp to={FAITH_IDS.length} delay={0.2} duration={1.8} />
             </dd>
           </div>
           <div>
             <dt className="eyebrow">Pieces in the catalogue</dt>
             <dd className="mt-1.5 font-display text-2xl text-ink">
-              <NumberTicker value={PRODUCTS.length} className="text-ink" delay={0.25} />
+              <CountUp to={PRODUCTS.length} delay={0.4} duration={1.8} />
             </dd>
           </div>
           <div>
             <dt className="eyebrow">Retailers listing</dt>
             <dd className="mt-1.5 font-display text-2xl text-ink">
-              <NumberTicker value={RETAILERS.length} className="text-ink" delay={0.4} />
+              <CountUp to={RETAILERS.length} delay={0.6} duration={1.8} />
             </dd>
           </div>
         </dl>
@@ -228,7 +285,16 @@ export function HomePage() {
           ================================================================ */}
       <section className="border-b border-border bg-marigold-soft/60" aria-label="Traditions covered">
         <div className="container py-6">
-          <p className="eyebrow mb-4 text-center">Traditions we plan for</p>
+          <p className="eyebrow mb-4 text-center">
+            <ShinyText
+              text="Traditions we plan for"
+              speed={2}
+              spread={260}
+              color="hsl(var(--gold-deep))"
+              shineColor="hsl(var(--champagne))"
+              direction="left"
+            />
+          </p>
           <Marquee pauseOnHover className="[--duration:50s]">
             {TRADITION_FAITHS.map((faith) => (
               <span
@@ -487,29 +553,52 @@ export function HomePage() {
       {/* ================================================================
           10. Closing CTA — full-bleed image with one decision
           ================================================================ */}
-      <section className="border-t border-border">
-        <div className="container">
+      <section className="relative overflow-hidden border-t border-border">
+        <div className="container relative">
           <div className="grid items-center gap-10 py-16 lg:grid-cols-2 lg:gap-16 lg:py-24">
             <div>
-              <p className="eyebrow mb-4">Start where you are</p>
-              <h2 className="text-display-sm text-ink lg:text-display-md">
-                Pick your wedding context and the whole platform changes with it
-              </h2>
-              <p className="mt-5 max-w-lg text-[0.9375rem] leading-relaxed text-ink-soft">
-                Collections, edits and inspiration written around your traditions. Change your mind at any
-                time — nothing is locked in.
+              <p className="eyebrow mb-4">
+                <ShinyText
+                  text="Start where you are"
+                  speed={2}
+                  spread={260}
+                  color="hsl(var(--gold-deep))"
+                  shineColor="hsl(var(--champagne))"
+                  direction="left"
+                />
               </p>
+              <SplitText
+                text="Pick your wedding context and the whole platform changes with it"
+                tag="h2"
+                splitType="words"
+                className="text-display-sm text-ink lg:text-display-md"
+                textAlign="left"
+                threshold={0.2}
+                delay={40}
+                duration={1.1}
+                from={{ opacity: 0, y: 34 }}
+              />
+              <FadeContent blur duration={900} delay={0.15} className="mt-5 max-w-lg">
+                <p className="text-[0.9375rem] leading-relaxed text-ink-soft">
+                  Collections, edits and inspiration written around your traditions. Change your mind at any
+                  time — nothing is locked in.
+                </p>
+              </FadeContent>
               <div className="mt-8 flex flex-wrap gap-3">
-                <ShimmerButton
-                  asChild
-                  className="px-7 py-3.5 text-sm"
-                  background="hsl(var(--rose))"
-                >
-                  <Link to={routes.collectionsBridal}>Shop bridal</Link>
-                </ShimmerButton>
-                <Button asChild variant="outline" size="lg">
-                  <Link to={routes.inspiration}>Read inspiration</Link>
-                </Button>
+                <Magnet magnetStrength={6} padding={90} wrapperClassName="shrink-0">
+                  <ShimmerButton
+                    asChild
+                    className="px-7 py-3.5 text-sm"
+                    background="hsl(var(--rose))"
+                  >
+                    <Link to={routes.collectionsBridal}>Shop bridal</Link>
+                  </ShimmerButton>
+                </Magnet>
+                <Magnet magnetStrength={6} padding={90} wrapperClassName="shrink-0">
+                  <Button asChild variant="outline" size="lg">
+                    <Link to={routes.inspiration}>Read inspiration</Link>
+                  </Button>
+                </Magnet>
               </div>
             </div>
             <MediaImage
@@ -519,6 +608,17 @@ export function HomePage() {
               className="hidden lg:block"
             />
           </div>
+        </div>
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-44 opacity-80">
+          <DotGrid
+            dotSize={7}
+            gap={22}
+            baseColor="#ECEAE2"
+            activeColor="hsl(var(--rose))"
+            proximity={120}
+            speedTrigger={150}
+            maxSpeed={4500}
+          />
         </div>
       </section>
     </>
@@ -577,8 +677,27 @@ function ActiveContextSection() {
     <Section id="wedding-context" tone="muted">
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div className="max-w-2xl">
-          <p className="eyebrow mb-3">Your wedding context</p>
-          <h2 className="text-display-sm text-ink">{context.label}</h2>
+          <p className="eyebrow mb-3">
+            <ShinyText
+              text="Your wedding context"
+              speed={2}
+              spread={260}
+              color="hsl(var(--gold-deep))"
+              shineColor="hsl(var(--champagne))"
+              direction="left"
+            />
+          </p>
+          <SplitText
+            text={context.label}
+            tag="h2"
+            splitType="words"
+            className="text-display-sm text-ink"
+            textAlign="left"
+            threshold={0.2}
+            delay={40}
+            duration={1.1}
+            from={{ opacity: 0, y: 34 }}
+          />
           <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-soft">
             {context.isMultiTradition
               ? `You are planning across ${context.combined.length} traditions. Events, tasks and vendors are drawn from all of them.`

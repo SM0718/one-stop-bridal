@@ -9,6 +9,7 @@ import { formatDate } from '@/lib/format';
 import { PageHeader } from '@/components/ui/breadcrumb';
 import { MediaImage, MediaZoom } from '@/components/ui/media';
 import { Section, SectionHeader, EditorialSplit } from '@/components/editorial/Section';
+import { SplitText } from '@/components/reactbits';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Button } from '@/components/ui/button';
 import { SavedArticleStrip } from '@/components/editorial/SavedArticleStrip';
@@ -120,7 +121,17 @@ export function InspirationIndexPage() {
                       {INSPIRATION_CATEGORIES.find((c) => c.id === lead.categoryId)?.name} · {lead.readingMinutes} min
                       read
                     </p>
-                    <h2 className="mt-3 text-display-sm text-ink lg:text-display-md">{lead.title}</h2>
+                    <SplitText
+                      text={lead.title}
+                      tag="h2"
+                      splitType="words"
+                      className="mt-3 text-display-sm text-ink lg:text-display-md"
+                      textAlign="left"
+                      threshold={0.15}
+                      delay={30}
+                      duration={1.1}
+                      from={{ opacity: 0, y: 30 }}
+                    />
                   </div>
                   <div className="lg:col-span-5 lg:pt-8">
                     <p className="text-[0.9375rem] leading-relaxed text-ink-soft">{lead.standfirst}</p>

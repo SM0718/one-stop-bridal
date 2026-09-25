@@ -19,6 +19,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Field, Input, Textarea } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Section, SectionHeader, EditorialSplit } from '@/components/editorial/Section';
+import { SplitText } from '@/components/reactbits';
 import { useAuthStore } from '@/stores/auth';
 
 type ApplicationValues = z.input<typeof retailerApplicationSchema>;
@@ -56,7 +57,17 @@ export function RetailersLandingPage() {
           <MediaImage mediaKey="editorial-pillars" aspect="editorial" priority sizes="(min-width: 1024px) 48vw, 100vw" />
           <div>
             <p className="eyebrow mb-3">Why join</p>
-            <h2 className="text-display-sm text-ink">Your work, in front of the right wedding</h2>
+            <SplitText
+              text="Your work, in front of the right wedding"
+              tag="h2"
+              splitType="words"
+              className="text-display-sm text-ink"
+              textAlign="left"
+              threshold={0.15}
+              delay={30}
+              duration={1.1}
+              from={{ opacity: 0, y: 30 }}
+            />
             <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink-soft">
               Most marketplaces send you everyone. Couples here tell us their wedding context before they browse, so a
               lehenga atelier is not competing with a gown house for the same search — and the enquiries you receive are

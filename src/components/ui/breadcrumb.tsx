@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ArrowRight2 } from 'iconsax-react';
 import { Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
+import { FadeContent, ShinyText, SplitText } from '@/components/reactbits';
 
 interface Crumb {
   label: string;
@@ -67,10 +68,33 @@ export function PageHeader({
       {breadcrumbs ? <Breadcrumbs items={breadcrumbs} className="mb-6" /> : null}
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div className="max-w-2xl">
-          {eyebrow ? <p className="eyebrow mb-3">{eyebrow}</p> : null}
-          <h1 className="text-display-sm text-ink sm:text-display-md">{title}</h1>
+          {eyebrow ? (
+            <p className="eyebrow mb-3">
+              <ShinyText
+                text={eyebrow}
+                speed={2}
+                spread={260}
+                color="hsl(var(--gold-deep))"
+                shineColor="hsl(var(--champagne))"
+                direction="left"
+              />
+            </p>
+          ) : null}
+          <SplitText
+            text={title}
+            tag="h1"
+            splitType="words, chars"
+            className="text-display-sm text-ink sm:text-display-md"
+            textAlign="left"
+            threshold={0.1}
+            delay={20}
+            duration={1.1}
+            from={{ opacity: 0, y: 36 }}
+          />
           {standfirst ? (
-            <p className="mt-4 max-w-editorial text-[0.9375rem] leading-relaxed text-ink-soft">{standfirst}</p>
+            <FadeContent blur duration={850} delay={0.15} className="mt-4 max-w-editorial">
+              <p className="text-[0.9375rem] leading-relaxed text-ink-soft">{standfirst}</p>
+            </FadeContent>
           ) : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2.5">{actions}</div> : null}
